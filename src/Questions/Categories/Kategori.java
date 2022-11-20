@@ -1,13 +1,17 @@
-package Questions;
+package Questions.Categories;
+
+import Questions.Answer;
+import Questions.Question;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-abstract class QuestionCategory {
+abstract class Kategori {
 
 
     private String categoryName;
@@ -33,10 +37,8 @@ abstract class QuestionCategory {
 
             while (readTextFile.hasNext()) {
                 for (int lineCounter = 0; lineCounter <= 4; lineCounter++) { //todo; loopa om 0-4.
-                    System.out.println(lineCounter);
                     if (readTextFile.hasNextLine()) {
                         String tempLine = readTextFile.nextLine();
-                        System.out.println(tempLine);
 
 
                         switch (lineCounter) {
@@ -93,8 +95,27 @@ abstract class QuestionCategory {
         return tempAnswer;
     }
 
+    /**
+     *  Shuffle the answers of the desired questions.
+     *  Shame function as in Question, but simplyfied the process to use it.
+     *
+     * @see Question
+     */
 
-    public QuestionCategory(String categoryName) {
+public void shuffleQuestionsFromList(int indexOfQuestion){
+        listOfQuestions.get(indexOfQuestion).shuffleQuestions();
+
+}
+
+public void shuffleEntireListOfQuestions(){
+    Collections.shuffle(listOfQuestions);
+}
+
+
+
+
+
+    public Kategori(String categoryName) {
         setCategoryName(categoryName);
     }
 
