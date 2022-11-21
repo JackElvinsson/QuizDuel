@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 import java.awt.*;
@@ -41,24 +39,20 @@ public class GUI extends JFrame {
     private JPanel statsGridOpponent;
     private JLabel playerCurrentScore;
     private JLabel opponentCurrentScore;
-    protected int answerCounter = 0;
-
     int rows = 4;
     int columns = 3;
-    List<Integer> listOfNumbers;
-    JTextArea[][] boxArray;
-    int[][] statsGrid;
+    protected int questionsPerRound = columns;
+    protected int categoriesPerRound = rows;
+    protected int answerCounter = 0;
+    protected int categoryCounter = 0;
+    List<Integer> integerList;
+    JTextArea[][] boxGrid;
+    JTextArea[][] boxGrid2;
+    int[][] answerArray;
 
     protected User user = new User();
 
     GUI() {
-
-        // Ändrar utseende
-//        try {
-//            UIManager.setLookAndFeel(new SynthLookAndFeel());
-//        }catch (UnsupportedLookAndFeelException e) {
-//            System.out.println("Ett fel inträffade");
-//        }
 
         // Add panels to frame
         setLayout(new FlowLayout());
@@ -76,9 +70,14 @@ public class GUI extends JFrame {
         statsGridPlayer.setForeground(new java.awt.Color(144, 184, 252));
         statsGridOpponent.setForeground(new java.awt.Color(144, 184, 252));
 
-        listOfNumbers = generateListOfNumbers();
-        statsGrid = generateBoardArray(listOfNumbers);
-        boxArray = generateButtonArray(statsGrid);
+        integerList = generateIntegerList();
+        answerArray = generateAnswerArray(integerList);
+        boxGrid = generateBoxGrid(answerArray);
+        boxGrid2 = generateBoxGrid2(answerArray);
+
+        // colorTest
+//        boxGrid[0][1].setBackground(Color.red);
+//        boxGrid2[0][2].setBackground(Color.red);
 
         pack();
         setVisible(true);
@@ -113,8 +112,7 @@ public class GUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Välj ett namn och tryck\nenter för att registrera", "Meddelande", JOptionPane.INFORMATION_MESSAGE);
 
                 } else {
-                    startPanel.setVisible(false);
-                    lobbyPanel.setVisible(true);
+                    changeScene(startPanel, lobbyPanel);
                 }
             }
         });
@@ -123,12 +121,11 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                lobbyPanel.setVisible(false);
-                categoryPanel.setVisible(true);
+                changeScene(lobbyPanel, categoryPanel);
 
 //                if (isChoosing) {
-                lobbyPanel.setVisible(false);
-                categoryPanel.setVisible(true);
+//                lobbyPanel.setVisible(false);
+//                categoryPanel.setVisible(true);
 
                 //TODO Uppdatera kategorialternativ
 
@@ -151,6 +148,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 lobbyPanel.setVisible(false);
                 startPanel.setVisible(true);
+                changeScene(lobbyPanel, startPanel);
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
@@ -161,8 +159,8 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                categoryPanel.setVisible(false);
-                playPanel.setVisible(true);
+                categoryCounter++;
+                changeScene(categoryPanel, playPanel);
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
@@ -173,8 +171,8 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                categoryPanel.setVisible(false);
-                playPanel.setVisible(true);
+                categoryCounter++;
+                changeScene(categoryPanel, playPanel);
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
@@ -185,8 +183,8 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                categoryPanel.setVisible(false);
-                playPanel.setVisible(true);
+                categoryCounter++;
+                changeScene(categoryPanel, playPanel);
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
@@ -200,10 +198,9 @@ public class GUI extends JFrame {
                 answerCounter++;
 
                 if (endOfRound(answerCounter)) {
-                    playPanel.setVisible(false);
-                    statsPanel.setVisible(true);
+                    changeScene(playPanel, statsPanel);
+                    answerCounter = 0;
 
-                    //TODO: Gå till statsPanel
                 } else {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
@@ -218,10 +215,9 @@ public class GUI extends JFrame {
                 answerCounter++;
 
                 if (endOfRound(answerCounter)) {
-                    playPanel.setVisible(false);
-                    statsPanel.setVisible(true);
+                    changeScene(playPanel, statsPanel);
+                    answerCounter = 0;
 
-                    //TODO: Gå till statsPanel
                 } else {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
@@ -236,10 +232,9 @@ public class GUI extends JFrame {
                 answerCounter++;
 
                 if (endOfRound(answerCounter)) {
-                    playPanel.setVisible(false);
-                    statsPanel.setVisible(true);
+                    changeScene(playPanel, statsPanel);
+                    answerCounter = 0;
 
-                    //TODO: Gå till statsPanel
                 } else {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
@@ -254,10 +249,9 @@ public class GUI extends JFrame {
                 answerCounter++;
 
                 if (endOfRound(answerCounter)) {
-                    playPanel.setVisible(false);
-                    statsPanel.setVisible(true);
+                    changeScene(playPanel, statsPanel);
+                    answerCounter = 0;
 
-                    //TODO: Gå till statsPanel
                 } else {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
@@ -270,8 +264,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                waitingPanel.setVisible(false);
-                lobbyPanel.setVisible(true);
+                changeScene(waitingPanel, lobbyPanel);
 
                 //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
 
@@ -281,9 +274,12 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                if (endOfGame(categoryCounter)) {
+                    changeScene(statsPanel, lobbyPanel);
+                } else
+
 //                if (isChoosing) {
-                statsPanel.setVisible(false);
-                categoryPanel.setVisible(true);
+                    changeScene(statsPanel, categoryPanel);
 
                 //TODO Uppdatera kategorialternativ
 
@@ -312,10 +308,25 @@ public class GUI extends JFrame {
 
 
     public boolean endOfRound(int answerCounter) {
-        return answerCounter >= 3;
+        return answerCounter >= questionsPerRound;
     }
 
-    public List<Integer> generateListOfNumbers() {
+    public boolean endOfGame(int categoryCounter) {
+        return categoryCounter >= categoriesPerRound;
+    }
+
+    public void changeScene(JPanel fromScene, JPanel toScene) {
+        fromScene.setVisible(false);
+        toScene.setVisible(true);
+    }
+
+    //TODO: isChoosing()
+    public void isChoosing() {
+
+    }
+
+
+    public List<Integer> generateIntegerList() {
 
         List<Integer> listOfNumbers = new ArrayList<>();
         for (int i = 0; i < columns * rows; i++) {
@@ -325,7 +336,7 @@ public class GUI extends JFrame {
         return listOfNumbers;
     }
 
-    public int[][] generateBoardArray(List<Integer> listOfNumbers) {
+    public int[][] generateAnswerArray(List<Integer> listOfNumbers) {
         int[][] gameBoardArray = new int[rows][columns];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++)
@@ -335,21 +346,36 @@ public class GUI extends JFrame {
         return gameBoardArray;
     }
 
-    public JTextArea[][] generateButtonArray(int[][] statsGrid) {
+
+    //TODO Hur löser vi uppdatering av motståndarens spelplanshalva?
+    //TODO räcker det med en generateBoxGrid som skapas av två olika klienter?
+    public JTextArea[][] generateBoxGrid(int[][] statsGrid) {
         JTextArea[][] boxArray = new JTextArea[rows][columns];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 boxArray[i][j] = new JTextArea();
-//                boxArray[i][j].addActionListener(statsGridListener);
                 boxArray[i][j].setBackground(new java.awt.Color(0, 102, 204));
                 boxArray[i][j].setFocusable(false);
 
-
                 statsGridPlayer.add(boxArray[i][j]);
-                statsGridOpponent.add(boxArray[i][j]);
             }
         }
         return boxArray;
+    }
+
+    public JTextArea[][] generateBoxGrid2(int[][] statsGrid) {
+        JTextArea[][] boxArray2 = new JTextArea[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+
+                boxArray2[i][j] = new JTextArea();
+                boxArray2[i][j].setBackground(new java.awt.Color(0, 102, 204));
+                boxArray2[i][j].setFocusable(false);
+
+                statsGridOpponent.add(boxArray2[i][j]);
+            }
+        }
+        return boxArray2;
     }
 //    public boolean countDown() {
 //

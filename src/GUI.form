@@ -878,7 +878,7 @@
               <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <font name="Comic Sans MS" size="16" style="1"/>
+              <font name="Comic Sans MS" size="20" style="1"/>
               <foreground color="-2476"/>
               <text value="0/0"/>
             </properties>
@@ -888,7 +888,7 @@
               <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <font name="Comic Sans MS" size="16" style="1"/>
+              <font name="Comic Sans MS" size="20" style="1"/>
               <foreground color="-2476"/>
               <text value="0/0"/>
             </properties>
@@ -899,7 +899,7 @@
             </constraints>
             <properties>
               <background color="-131585"/>
-              <font name="Comic Sans MS" size="16" style="1"/>
+              <font name="Comic Sans MS" size="18" style="1"/>
               <foreground color="-131585"/>
               <text value="Spelare2 statistik:"/>
             </properties>
@@ -910,7 +910,7 @@
             </constraints>
             <properties>
               <background color="-131585"/>
-              <font name="Comic Sans MS" size="16" style="1"/>
+              <font name="Comic Sans MS" size="18" style="1"/>
               <foreground color="-131585"/>
               <text value="Spelare2 statistik:"/>
             </properties>
