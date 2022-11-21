@@ -104,7 +104,6 @@ abstract class Kategori {
 
 public void shuffleQuestionsFromList(int indexOfQuestion){
         listOfQuestions.get(indexOfQuestion).shuffleQuestions();
-
 }
 
 public void shuffleEntireListOfQuestions(){
