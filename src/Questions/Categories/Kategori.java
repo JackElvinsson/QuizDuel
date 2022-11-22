@@ -11,12 +11,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-abstract class Kategori {
+public abstract class Kategori {
 
 
     private String categoryName;
     private List<Question> listOfQuestions;
     Path fileWithQuestions;
+    Boolean used=false;
 
 
     /**
@@ -136,5 +137,13 @@ public void shuffleEntireListOfQuestions(){
 
     public void setListOfQuestions(List<Question> listOfQuestions) {
         this.listOfQuestions = listOfQuestions;
+    }
+
+    public Boolean getUsed() {
+        return used;
+    }
+
+    public void setUsed(Boolean used) {
+        this.used = used;
     }
 }
