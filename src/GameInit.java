@@ -23,6 +23,7 @@ public class GameInit {
     }
 
 
+    //Todo; fixa så att om det inte finns 4st svar att loopen inte fastnar
     public List<Kategori> getCategoryOptions() {
 
         List<Kategori> listOfOptions = new ArrayList<>();
@@ -38,22 +39,15 @@ public class GameInit {
     }
 
 
-
     public void makeNotChosenCategoryAvailable(List<Kategori> list, Kategori selectedItem) {
-
         for (Kategori cat : list) {
             for (Kategori originalCat : categoryList)
                 if (cat.equals(originalCat) && !cat.equals(selectedItem))
                     originalCat.setUsed(false);
         }
-
     }
 
 
-    public List<Kategori> generateCatOptionsList() {
-        List<Kategori> categoryOptionsList = new ArrayList<>(4);
-        return categoryOptionsList;
-    }
 
 
 }
