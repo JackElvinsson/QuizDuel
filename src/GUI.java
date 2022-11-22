@@ -1,11 +1,26 @@
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GUI extends JFrame {
+
+    int rows = 4;
+    int columns = 3;
+    protected int questionsPerRound = columns;
+    protected int categoriesPerRound = rows;
+    protected int answerCounter = 0;
+    protected int categoryCounter = 0;
+    List<Integer> integerList;
+    JTextArea[][] boxGrid;
+    JTextArea[][] boxGrid2;
+    int[][] answerArray;
+    protected User user = new User();
+
     private JPanel mainPanel;
     private JPanel startPanel;
     private JPanel lobbyPanel;
@@ -39,30 +54,19 @@ public class GUI extends JFrame {
     private JPanel statsGridOpponent;
     private JLabel playerCurrentScore;
     private JLabel opponentCurrentScore;
-    int rows = 4;
-    int columns = 3;
-    protected int questionsPerRound = columns;
-    protected int categoriesPerRound = rows;
-    protected int answerCounter = 0;
-    protected int categoryCounter = 0;
-    List<Integer> integerList;
-    JTextArea[][] boxGrid;
-    JTextArea[][] boxGrid2;
-    int[][] answerArray;
 
-    protected User user = new User();
-
+    Border border = new BevelBorder(BevelBorder.RAISED);
     GUI() {
 
         // Add panels to frame
         setLayout(new FlowLayout());
         add(mainPanel);
-        startPanel.setVisible(false);
+        startPanel.setVisible(true);
         lobbyPanel.setVisible(false);
         categoryPanel.setVisible(false);
         playPanel.setVisible(false);
         waitingPanel.setVisible(false);
-        statsPanel.setVisible(true);
+        statsPanel.setVisible(false);
 
         // Stats gridPanel test
         statsGridPlayer.setLayout(new GridLayout(rows, columns, 10, 10));
@@ -74,6 +78,9 @@ public class GUI extends JFrame {
         answerArray = generateAnswerArray(integerList);
         boxGrid = generateBoxGrid(answerArray);
         boxGrid2 = generateBoxGrid2(answerArray);
+
+        playerCurrentScore.setText("0/" + rowsToString(rows * columns));
+        opponentCurrentScore.setText("0/" + rowsToString(rows * columns));
 
         // colorTest
 //        boxGrid[0][1].setBackground(Color.red);
@@ -143,6 +150,7 @@ public class GUI extends JFrame {
 
             }
         });
+
         lamnaLobby.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -155,6 +163,7 @@ public class GUI extends JFrame {
 
             }
         });
+
         firstCategory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -167,6 +176,7 @@ public class GUI extends JFrame {
 
             }
         });
+
         secondCategory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -179,6 +189,7 @@ public class GUI extends JFrame {
 
             }
         });
+
         thirdCategory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -191,6 +202,7 @@ public class GUI extends JFrame {
 
             }
         });
+
         firstAnswer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -208,6 +220,7 @@ public class GUI extends JFrame {
                 }
             }
         });
+
         secondAnswer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -225,6 +238,7 @@ public class GUI extends JFrame {
                 }
             }
         });
+
         thirdAnswer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -242,6 +256,7 @@ public class GUI extends JFrame {
                 }
             }
         });
+
         fourthAnswer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -270,6 +285,7 @@ public class GUI extends JFrame {
 
             }
         });
+
         continueGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -296,16 +312,34 @@ public class GUI extends JFrame {
 
             }
         });
+
         statsPanelGiveUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
             }
         });
 
-
     }
 
+//    public boolean correctAnswer(){
+//
+//        return false;
+//    }
+//
+//    public void answerColor(ActionEvent e, JButton answer, boolean correctAnswer) {
+//
+//        if(e.equals(correctAnswer)){
+//            answer.setBackground(new Color(70,255,0));
+//        } else {
+//            answer.setBackground(new Color(255,0,6));
+//        }
+//    }
+
+    public String rowsToString(int rows) {
+        return String.valueOf(rows);
+    }
 
     public boolean endOfRound(int answerCounter) {
         return answerCounter >= questionsPerRound;
@@ -324,6 +358,13 @@ public class GUI extends JFrame {
     public void isChoosing() {
 
     }
+
+    //TODO: updateBoxGrid()
+
+
+    /**
+     * Hur gör vi så att man endast ser vad motståndaren har svarat när hela rundan är avklarad?
+     */
 
 
     public List<Integer> generateIntegerList() {
@@ -347,14 +388,17 @@ public class GUI extends JFrame {
     }
 
 
-    //TODO Hur löser vi uppdatering av motståndarens spelplanshalva?
-    //TODO räcker det med en generateBoxGrid som skapas av två olika klienter?
+    /**
+     * Hur löser vi uppdatering av motståndarens spelplanshalva?
+     * räcker det med en generateBoxGrid som skapas av två olika klienter?
+     */
     public JTextArea[][] generateBoxGrid(int[][] statsGrid) {
         JTextArea[][] boxArray = new JTextArea[rows][columns];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 boxArray[i][j] = new JTextArea();
                 boxArray[i][j].setBackground(new java.awt.Color(0, 102, 204));
+                boxArray[i][j].setBorder(border);
                 boxArray[i][j].setFocusable(false);
 
                 statsGridPlayer.add(boxArray[i][j]);
@@ -370,6 +414,7 @@ public class GUI extends JFrame {
 
                 boxArray2[i][j] = new JTextArea();
                 boxArray2[i][j].setBackground(new java.awt.Color(0, 102, 204));
+                boxArray2[i][j].setBorder(border);
                 boxArray2[i][j].setFocusable(false);
 
                 statsGridOpponent.add(boxArray2[i][j]);
