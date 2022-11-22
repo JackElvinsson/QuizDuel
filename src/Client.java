@@ -1,76 +1,85 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Client  implements Runnable{
+public class Client extends Thread implements Runnable {
 
-    public Socket client;
-    private BufferedReader in;
     private PrintWriter out;
-    private boolean finish;
+    BufferedReader in;
+    String name;
+    String answer;
 
-    @Override
+
     public void run() {
-        try{
+        try {
             Socket client = new Socket("127.0.0.1", 9999);
             out = new PrintWriter(client.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-            inputHandler inHandler = new inputHandler();
-            Thread t = new Thread(inHandler);
-            t.start();
+            int i = 0;
+            String inServer;
+            String question = "";
+            String answerOne = "";
+            String answerTwo = "";
+            String answerThree = "";
+            String answerFour = "";
+            boolean roundOver = false;
 
-            String inMessage;
-            while ((inMessage = in.readLine()) !=null){
-                System.out.println(inMessage);
-
-            }
-
-        }catch (IOException e) {
-            shutdown();
-
-        }
-    }
-    public void shutdown() {
-        finish = true;
-        try{
-            in.close();
-            out.close();
-            if (!client.isClosed()){
-                client.close();
-            }
-        }catch (IOException e){
-            e.printStackTrace(System.out);
+            // TODO: anropa gui från client
+            // TODO: Frågor
 
 
-        }
-    }
-    class inputHandler implements Runnable{
-        @Override
-        public void run(){
-            try{
-                BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
-                while (!finish) {
-                    String message = inReader.readLine();
-                    if (finish) {
-                        inReader.close();
-                        shutdown();
-                    } else {
-                        out.println(message);
-                    }
+            while ((inServer = in.readLine()) != null) {
+                if (inServer.contains("Player")) {
+                    name = inServer.split(":")[1];
                 }
-            }catch(IOException e){
-                shutdown();
+
+                if (inServer.contains("Resultat:")){
+                    JOptionPane.showMessageDialog(null, inServer);
+                }
+                //TODO Markera frågor och rätt svarsalternativ.
+                if (inServer.contains("?")) {
+                    roundOver = true;
+                    question = inServer;
+                    continue;
+                }
+                if (roundOver && i == 0) {
+                    answerOne = inServer;
+                    i++;
+                } else if (roundOver && i == 1) {
+                    answerTwo = inServer;
+                    i++;
+                } else if (roundOver && i == 2) {
+                    answerThree = inServer;
+                    i++;
+                } else if (roundOver && i == 3) {
+                    answerFour = inServer;
+                    i++;
+                    // Anrop metod med förslagsvis GUI?
+                    game(question, answerOne, answerTwo, answerThree, answerFour, out);
+                } else {
+                    roundOver = false;
+                }
             }
-        }
+        }catch (IOException e) {
+            e.printStackTrace();
 
-    }
-    public static void main (String[] args){
-        Client client = new Client();
-        client.run();
 
+        }}public void game(String question,String answerOne,String answerTwo,String answerThree, String answerFour, PrintWriter out){
+
+        ActionListener listener = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                answer = ((JButton) e.getSource()).getText();
+                out.println(name + ":" + answer);
+            }
+        };
     }
 }
 
