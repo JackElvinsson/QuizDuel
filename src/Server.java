@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.util.concurrent.Executors;
 
 public class Server {
-    //TODO: Anropa GUI från Serversida
     public static void main(String[] args) throws Exception {
         ServerSocket listener = new ServerSocket(9999);
         System.out.println("Server för Quizkampen kör");
@@ -57,24 +56,49 @@ class Quiz {
 
             }
         }
-
         public void setOpponent(Player opponent) {
             this.opponent = opponent;
         }
-    }
-}
+        public void run(){
+            try{
+                String correctAnswer = "";
+                out.println("Player:" + name);
+                out.println(database.getQuestion().getQuestion());
+                for(Database.Answer answer : database.getQuestion().answers) {
+                    if(answer.correct) {
+                        correctAnswer = answer.answer;
+                    }
+                    out.println(answer.answer);
+                }
 
-        ///TODO: Hitta ett sätt att hantera frågorna genom ex bool, string anserw om anserw = true eller anserw =
-        // TODO: correct answer
-        /*public void run() {
-            try {
-
+                while (true) {
+                    String command = in.readLine();
+                    if(command.contains(name + ":")) {
+                        answered = true;
+                        answer = command.split(":")[1];
+                    }
+                    if (answered && opponent.answered) {
+                        String[] info = command.split(":");
+                        if (answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
+                            out.println("Resultat: LIKA");
+                            opponent.out.println("Resultat: LIKA");
+                        } else if(answer.equals(correctAnswer) && !opponent.answer.equals(correctAnswer)) {
+                            out.println("Resultat: DU VANN");
+                            opponent.out.println("Resultat: DU FÖRLORADE");
+                        } else if(!answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
+                            out.println("Resultat: DU FÖRLORADE");
+                            opponent.out.println("Resultat: DU VANN");
+                        } else {
+                            out.println("Resultat: DU FÖRLORADE");
+                            opponent.out.println("Resultat: DU FÖRLORADE");
+                        }
+                    }
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e);
             } finally {
-                try {
-                    socket.close();
-                } catch (IOException e){}
+                try {socket.close();} catch (IOException e) {}
             }
         }
-    }*/
+    }
+}
