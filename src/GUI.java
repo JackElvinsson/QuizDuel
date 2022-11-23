@@ -20,8 +20,8 @@ public class GUI extends JFrame {
     GameInit gameInit = new GameInit();
     List<Kategori> categoryList = gameInit.getCategoryList();
     List<Kategori> categoryOptions = gameInit.getCategoryOptions();
-    int rows = 4;
-    int columns = 3;
+    int rows = 3;
+    int columns = 2;
     int categoryTracker = -1;
     protected int questionsPerRound = columns;
     protected int categoriesPerRound = rows;
@@ -77,8 +77,8 @@ public class GUI extends JFrame {
         // Add panels to frame
         setLayout(new FlowLayout());
         add(mainPanel);
-        startPanel.setVisible(false);
-        lobbyPanel.setVisible(true);
+        startPanel.setVisible(true);
+        lobbyPanel.setVisible(false);
         categoryPanel.setVisible(false);
         playPanel.setVisible(false);
         waitingPanel.setVisible(false);
@@ -156,8 +156,6 @@ public class GUI extends JFrame {
 //                lobbyPanel.setVisible(false);
 //                categoryPanel.setVisible(true);
 
-                //TODO Uppdatera kategorialternativ
-
 //                } else {
 //                    lobbyPanel.setVisible(false);
 //                    waitingPanel.setVisible(true);
@@ -180,7 +178,6 @@ public class GUI extends JFrame {
                 startPanel.setVisible(true);
                 changeScene(lobbyPanel, startPanel);
 
-                //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
             }
@@ -194,10 +191,10 @@ public class GUI extends JFrame {
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
 
-                //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(0));
 
             }
         });
@@ -210,10 +207,10 @@ public class GUI extends JFrame {
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
 
-                //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(1));
 
             }
         });
@@ -226,10 +223,10 @@ public class GUI extends JFrame {
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
 
-                //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(2));
 
             }
         });
@@ -242,10 +239,10 @@ public class GUI extends JFrame {
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
 
-                //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(3));
 
             }
         });
@@ -262,7 +259,6 @@ public class GUI extends JFrame {
 
                 } else {
 
-                    //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
@@ -284,7 +280,6 @@ public class GUI extends JFrame {
 
                 } else {
 
-                    //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
@@ -306,7 +301,6 @@ public class GUI extends JFrame {
 
                 } else {
 
-                    //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
@@ -328,7 +322,6 @@ public class GUI extends JFrame {
 
                 } else {
 
-                    //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
@@ -370,7 +363,6 @@ public class GUI extends JFrame {
                 //TODO: Nästa spelare får välja kategori
                 //TODO: Spelare som ej väljer hamnar i waitingPanel
 
-                //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 firstAnswer.setBackground(new Color(0, 102, 204));
@@ -462,6 +454,8 @@ public class GUI extends JFrame {
      * <p>
      * Detta blir löst genom att hämta motståndarens data
      */
+
+
     public JTextArea[][] generateBoxGrid(int[][] statsGrid) {
         JTextArea[][] boxArray = new JTextArea[rows][columns];
         for (int i = 0; i < rows; i++) {
