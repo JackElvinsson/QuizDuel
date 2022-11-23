@@ -13,13 +13,13 @@ public class QuestionInit {
 
 
     final Path AllmäntPath = Paths.get("src/Questions/Files/Allmänt.txt");
-    Allmänt allmäntQ = new Allmänt("Allmän", AllmäntPath);
+    Allmänt allmäntQ = new Allmänt("Allmänt", AllmäntPath);
     final Path SportPath = Paths.get("src/Questions/Files/Sport.txt");
     Sport sportQ = new Sport("Sport", SportPath);
     final Path djurNaturPath=Paths.get("src/Questions/Files/Djur & Natur.txt");
     DjurNatur djurNaturQ=new DjurNatur("Djur & Natur", djurNaturPath);
     final Path tvFilmPath = Paths.get("src/Questions/Files/TV-Serier & Film.txt");
-    TVFilm tvFilmQ = new TVFilm("TV-Seier & Film", tvFilmPath);
+    TVFilm tvFilmQ = new TVFilm("TV-Serier & Film", tvFilmPath);
     final Path religionMytologiPath = Paths.get("src/Questions/Files/Religion & Mytologi.txt");
     ReligionMytologi religionMytologiQ = new ReligionMytologi("Religion & Mytologi.txt", religionMytologiPath);
     final Path historiaPath = Paths.get("src/Questions/Files/Historia.txt");

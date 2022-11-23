@@ -1,3 +1,8 @@
+import Questions.Answer;
+import Questions.Categories.Kategori;
+import Questions.Question;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -6,11 +11,18 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class GUI extends JFrame {
 
+//    MethodsGUI methodsGUI = new MethodsGUI();
+
+    GameInit gameInit = new GameInit();
+    List<Kategori> categoryList = gameInit.getCategoryList();
+    List<Kategori> categoryOptions = gameInit.getCategoryOptions();
     int rows = 4;
     int columns = 3;
+    int categoryTracker = -1;
     protected int questionsPerRound = columns;
     protected int categoriesPerRound = rows;
     protected int answerCounter = 0;
@@ -20,7 +32,9 @@ public class GUI extends JFrame {
     JTextArea[][] boxGrid2;
     int[][] answerArray;
     protected User user = new User();
+    private Random randomGenerator;
 
+    // JFrame components
     private JPanel mainPanel;
     private JPanel startPanel;
     private JPanel lobbyPanel;
@@ -50,19 +64,21 @@ public class GUI extends JFrame {
     private JPanel statsPanel;
     private JButton continueGame;
     private JButton statsPanelGiveUp;
-    private JPanel statsGridPlayer;
-    private JPanel statsGridOpponent;
+    protected JPanel statsGridPlayer;
+    protected JPanel statsGridOpponent;
     private JLabel playerCurrentScore;
     private JLabel opponentCurrentScore;
+    private JButton fourthCategory;
 
     Border border = new BevelBorder(BevelBorder.RAISED);
-    GUI() {
+
+    GUI() throws IOException {
 
         // Add panels to frame
         setLayout(new FlowLayout());
         add(mainPanel);
-        startPanel.setVisible(true);
-        lobbyPanel.setVisible(false);
+        startPanel.setVisible(false);
+        lobbyPanel.setVisible(true);
         categoryPanel.setVisible(false);
         playPanel.setVisible(false);
         waitingPanel.setVisible(false);
@@ -80,7 +96,7 @@ public class GUI extends JFrame {
         boxGrid2 = generateBoxGrid2(answerArray);
 
         playerCurrentScore.setText("0/" + rowsToString(rows * columns));
-        opponentCurrentScore.setText("0/" + rowsToString(rows * columns));
+//        opponentCurrentScore.setText("0/" + rowsToString(rows * columns));
 
         // colorTest
 //        boxGrid[0][1].setBackground(Color.red);
@@ -90,6 +106,7 @@ public class GUI extends JFrame {
         setVisible(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 
         // Action listeners
 
@@ -128,7 +145,12 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                categoryCounter = 0;
+
                 changeScene(lobbyPanel, categoryPanel);
+
+                setCategories(categoryOptions, firstCategory, secondCategory, thirdCategory, fourthCategory);
+
 
 //                if (isChoosing) {
 //                lobbyPanel.setVisible(false);
@@ -168,11 +190,14 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                categoryTracker = 0;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
 
             }
         });
@@ -181,11 +206,14 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                categoryTracker = 1;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
 
             }
         });
@@ -194,11 +222,30 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                categoryTracker = 2;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
+
+            }
+        });
+
+        fourthCategory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                categoryTracker = 3;
+                categoryCounter++;
+                changeScene(categoryPanel, playPanel);
+
+                //TODO: Uppdatera Fråga och svarsalternativ
+                //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
 
             }
         });
@@ -217,6 +264,10 @@ public class GUI extends JFrame {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
+                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    markUserAnswer(correctAnswer,firstAnswer);
                 }
             }
         });
@@ -235,6 +286,10 @@ public class GUI extends JFrame {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
+                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    markUserAnswer(correctAnswer,secondAnswer);
                 }
             }
         });
@@ -253,6 +308,10 @@ public class GUI extends JFrame {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
+                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    markUserAnswer(correctAnswer,thirdAnswer);
                 }
             }
         });
@@ -271,6 +330,10 @@ public class GUI extends JFrame {
 
                     //TODO: Uppdatera Fråga och svarsalternativ
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
+                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    markUserAnswer(correctAnswer,fourthAnswer);
                 }
             }
         });
@@ -309,6 +372,11 @@ public class GUI extends JFrame {
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+
+                firstAnswer.setBackground(new Color(0, 102, 204));
+                secondAnswer.setBackground(new Color(0, 102, 204));
+                thirdAnswer.setBackground(new Color(0, 102, 204));
+                fourthAnswer.setBackground(new Color(0, 102, 204));
 
             }
         });
@@ -391,6 +459,8 @@ public class GUI extends JFrame {
     /**
      * Hur löser vi uppdatering av motståndarens spelplanshalva?
      * räcker det med en generateBoxGrid som skapas av två olika klienter?
+     * <p>
+     * Detta blir löst genom att hämta motståndarens data
      */
     public JTextArea[][] generateBoxGrid(int[][] statsGrid) {
         JTextArea[][] boxArray = new JTextArea[rows][columns];
@@ -422,7 +492,90 @@ public class GUI extends JFrame {
         }
         return boxArray2;
     }
-//    public boolean countDown() {
+
+
+    public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
+
+        questionTextArea.setText(categoryOptions.get(i).getListOfQuestions().get(0).getQuestionText());
+        firstAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer1().getAnswerText());
+        secondAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer2().getAnswerText());
+        thirdAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer3().getAnswerText());
+        fourthAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer4().getAnswerText());
+
+    }
+
+    public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
+
+        //Generate 4 nonrecurring numbers
+
+//        int[] intArray = new int[4];
+//        int counter = 0;
+//
+//        for (int i = 0; i < 4; i++) {
+//            int j = generateRandomCategoryIndex(categoryOptions);
+//            if (j != intArray[0] || j != intArray[1] || j != intArray[2] || j != intArray[3] ) {
+//                intArray[counter] = j;
+//                counter++;
+//            }
+//        }
+
+        firstCategory.setText(categoryOptions.get(0).getCategoryName());
+        secondCategory.setText(categoryOptions.get(1).getCategoryName());
+        thirdCategory.setText(categoryOptions.get(2).getCategoryName());
+        fourthCategory.setText(categoryOptions.get(3).getCategoryName());
+    }
+
+    public String markCorrectAnswer(List<Kategori> categoryOptions, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int categoryTracker) {
+
+        if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getIsAnswerCorrect()) {
+            firstAnswer.setBackground(Color.GREEN);
+
+            System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getAnswerText());
+            return firstAnswer.getText();
+        }
+        else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getIsAnswerCorrect()) {
+            secondAnswer.setBackground(Color.GREEN);
+
+            System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getAnswerText());
+            return secondAnswer.getText();
+        }
+        else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getIsAnswerCorrect()) {
+            thirdAnswer.setBackground(Color.GREEN);
+
+            System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getAnswerText());
+            return thirdAnswer.getText();
+        }
+        else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getIsAnswerCorrect()) {
+            fourthAnswer.setBackground(Color.GREEN);
+
+            System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getAnswerText());
+            return fourthAnswer.getText();
+        } else
+            return null;
+    }
+
+        public void markUserAnswer(String correctAnswer, JButton answer) {
+
+        if(!answer.getText().equals(correctAnswer)){
+            answer.setBackground(Color.red);
+        } else {
+            answer.setBackground(Color.green);
+        }
+
+    }
+
+
+    public int generateRandomCategoryIndex(List<Kategori> categoryOptions) {
+        randomGenerator = new Random();
+        return randomGenerator.nextInt(categoryOptions.size());
+    }
+
+    public int generateRandomQuestionIndex(List<Question> questionList) {
+        randomGenerator = new Random();
+        return randomGenerator.nextInt(questionList.size());
+    }
+
+    //    public boolean countDown() {
 //
 //        int counter = 100;
 //        boolean timeOut = false;
@@ -449,4 +602,6 @@ public class GUI extends JFrame {
 //            }
 //        return timeOut;
 //    }
+
+
 }
