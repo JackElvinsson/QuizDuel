@@ -1,3 +1,5 @@
+import Questions.Question;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +12,7 @@ import java.net.Socket;
 
 public class Client extends Thread implements Runnable {
 
-    private PrintWriter out;
+    PrintWriter out;
     BufferedReader in;
     String name;
     String answer;
@@ -64,18 +66,18 @@ public class Client extends Thread implements Runnable {
                     answerFour = inServer;
                     i++;
 
-                    game(question, answerOne, answerTwo, answerThree, answerFour, out);
+                    quiz(question, answerOne, answerTwo, answerThree, answerFour, out);
                 } else {
                     roundOver = false;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
 
-        public void game(String q, String answerOne, String answerTwo, String answerThree, String answerFour, PrintWriter out) {
+        public void quiz(String q, String answerOne, String answerTwo, String answerThree, String answerFour, PrintWriter out) {
             // Uppdaterar vy
             frame.getContentPane().removeAll();
             //GUI för användare.

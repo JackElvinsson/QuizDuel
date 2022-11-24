@@ -1,3 +1,5 @@
+import Questions.Question;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,10 +32,10 @@ public class Server {
     }
 }
 class Quiz {
-    Quiz quiz;
+    Question question;
 
     public Quiz() {
-        quiz = new Quiz();
+        question = new Question();
     }
 
     class Player extends Thread {
@@ -63,8 +65,8 @@ class Quiz {
             try{
                 String correctAnswer = "";
                 out.println("Player:" + name);
-                out.println(database.getQuestion().getQuestion());
-                for(Database.Answer answer : database.getQuestion().answers) {
+                out.println(Q.getQuestion().getQuestion());
+                for(Q.Answer answer : Q.getQuestion().answers) {
                     if(answer.correct) {
                         correctAnswer = answer.answer;
                     }
@@ -72,25 +74,25 @@ class Quiz {
                 }
 
                 while (true) {
-                    String command = in.readLine();
-                    if(command.contains(name + ":")) {
+                    String reply = in.readLine();
+                    if(reply.contains(name + ":")) {
                         answered = true;
-                        answer = command.split(":")[1];
+                        answer = reply.split(":")[1];
                     }
                     if (answered && opponent.answered) {
-                        String[] info = command.split(":");
+                        String[] replies = reply.split(":");
                         if (answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
-                            out.println("Resultat: LIKA");
-                            opponent.out.println("Resultat: LIKA");
+                            out.println("Resultat: Lika!");
+                            opponent.out.println("Resultat: Lika!");
                         } else if(answer.equals(correctAnswer) && !opponent.answer.equals(correctAnswer)) {
-                            out.println("Resultat: DU VANN");
-                            opponent.out.println("Resultat: DU FÖRLORADE");
+                            out.println("Resultat: Du vann!");
+                            opponent.out.println("Resultat: Du Förlorade!");
                         } else if(!answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
-                            out.println("Resultat: DU FÖRLORADE");
-                            opponent.out.println("Resultat: DU VANN");
+                            out.println("Resultat: Du Förlorade!");
+                            opponent.out.println("Resultat: Du vann!");
                         } else {
-                            out.println("Resultat: DU FÖRLORADE");
-                            opponent.out.println("Resultat: DU FÖRLORADE");
+                            out.println("Resultat: Du Förlorade!");
+                            opponent.out.println("Resultat: Du Förlorade!");
                         }
                     }
                 }
