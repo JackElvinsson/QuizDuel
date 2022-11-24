@@ -1,6 +1,5 @@
 package Questions;
 
-import Questions.*;
 import Questions.Categories.Allmänt;
 import org.junit.jupiter.api.Test;
 

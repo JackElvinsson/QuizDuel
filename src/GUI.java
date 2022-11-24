@@ -1,4 +1,3 @@
-import Questions.Answer;
 import Questions.Categories.Kategori;
 import Questions.Question;
 
@@ -17,6 +16,8 @@ public class GUI extends JFrame {
 
 //    MethodsGUI methodsGUI = new MethodsGUI();
 
+    boolean isReady = false;
+    Client client = new Client();
     GameInit gameInit = new GameInit();
     List<Kategori> categoryList = gameInit.getCategoryList();
     List<Kategori> categoryOptions = gameInit.getCategoryOptions();
@@ -129,8 +130,7 @@ public class GUI extends JFrame {
         tillLobbyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                userName.setText(user.getName());
+                client.userName = (user.getName());
 
                 if (user.getName().equals("")) {
                     JOptionPane.showMessageDialog(null, "Välj ett namn och tryck\nenter för att registrera", "Meddelande", JOptionPane.INFORMATION_MESSAGE);
@@ -138,6 +138,7 @@ public class GUI extends JFrame {
                 } else {
                     changeScene(startPanel, lobbyPanel);
                 }
+                client.run();
             }
         });
 
@@ -488,7 +489,7 @@ public class GUI extends JFrame {
     }
 
 
-    public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
+public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
 
         questionTextArea.setText(categoryOptions.get(i).getListOfQuestions().get(0).getQuestionText());
         firstAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer1().getAnswerText());
@@ -597,5 +598,8 @@ public class GUI extends JFrame {
 //        return timeOut;
 //    }
 
-
+    public static void main(String[] args) throws IOException {
+        new Client();
+        new GUI();
+    }
 }

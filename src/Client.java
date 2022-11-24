@@ -1,4 +1,4 @@
-import Questions.Question;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +12,14 @@ import java.net.Socket;
 
 public class Client extends Thread implements Runnable {
 
+
     PrintWriter out;
     BufferedReader in;
-    String name;
+    String userName;
     String answer;
     JFrame frame;
-    public Client(JFrame frame){
+
+    public Client() {
         this.frame = frame;
     }
 
@@ -36,8 +38,6 @@ public class Client extends Thread implements Runnable {
             String answerThree = "";
             String answerFour = "";
             boolean roundOver = false;
-
-            // TODO: Frågor
 
 
             while ((inServer = in.readLine()) != null) {
@@ -76,54 +76,8 @@ public class Client extends Thread implements Runnable {
         }
     }
 
+   /* public void quiz(String q, String answerOne, String answerTwo, String answerThree, String answerFour, PrintWriter out) {
 
-        public void quiz(String q, String answerOne, String answerTwo, String answerThree, String answerFour, PrintWriter out) {
-            // Uppdaterar vy
-            frame.getContentPane().removeAll();
-            //GUI för användare.
-            JPanel main = new JPanel();
-            main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-            JPanel p0 = new JPanel();
-            p0.setLayout(new GridLayout(2, 2));
-            JLabel question = new JLabel("Question");
-            question.setHorizontalAlignment(JLabel.CENTER);
-            question.setFont(new Font("Serif", Font.BOLD, 20));
-            p0.setBackground(Color.GRAY);
-            JPanel p00 = new JPanel();
-            p00.setLayout(new GridLayout(2, 2));
-            p00.setBackground(Color.GRAY);
-            JLabel text = new JLabel(q);
-            text.setHorizontalAlignment(JLabel.CENTER);
-            text.setBackground(Color.GRAY);
-            JPanel p000 = new JPanel();
-            p000.setBackground(Color.GRAY);
-            JButton buttonOne = new JButton(answerOne);
-            buttonOne.setHorizontalAlignment(JLabel.RIGHT);
-            buttonOne.setBackground(Color.GRAY);
-            JButton buttonTwo = new JButton(answerTwo);
-            buttonTwo.setHorizontalAlignment(JLabel.LEFT);
-            buttonTwo.setBackground(Color.GRAY);
-            JPanel p0000 = new JPanel();
-            p0000.setBackground(Color.GRAY);
-            JButton buttonThree = new JButton(answerThree);
-            buttonThree.setHorizontalAlignment(JLabel.RIGHT);
-            buttonThree.setBackground(Color.GRAY);
-            JButton buttonFour = new JButton(answerFour);
-            buttonFour.setHorizontalAlignment(JLabel.LEFT);
-            buttonFour.setBackground(Color.GRAY);
-            buttonFour.setSize(60,60);
-
-            p0.add(question);
-            p00.add(text);
-            p000.add(buttonOne);
-            p000.add(buttonTwo);
-            p0000.add(buttonThree);
-            p0000.add(buttonFour);
-            main.add(p0);
-            main.add(p00);
-            main.add(p000);
-            main.add(p0000);
-            frame.add(main);
 
             // AL reg tryckt knapp i GUI, skickar därefter svar till sever.
             ActionListener listener = new ActionListener() {
@@ -142,8 +96,8 @@ public class Client extends Thread implements Runnable {
 
             frame.getContentPane().validate();
             frame.getContentPane().repaint();
-        }
-    }
+        }*/
+}
 
 
 

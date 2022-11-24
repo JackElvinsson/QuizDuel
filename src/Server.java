@@ -32,10 +32,10 @@ public class Server {
     }
 }
 class Quiz {
-    Question question;
 
-    public Quiz() {
-        question = new Question();
+    public Quiz() throws IOException {
+        GameInit game = new GameInit();
+//        game.skrivnågot();
     }
 
     class Player extends Thread {
@@ -55,7 +55,6 @@ class Quiz {
                         new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
-
             }
         }
         public void setOpponent(Player opponent) {
@@ -63,41 +62,41 @@ class Quiz {
         }
         public void run(){
             try{
-                String correctAnswer = "";
-                out.println("Player:" + name);
-                out.println(Q.getQuestion().getQuestion());
-                for(Q.Answer answer : Q.getQuestion().answers) {
-                    if(answer.correct) {
-                        correctAnswer = answer.answer;
-                    }
-                    out.println(answer.answer);
-                }
+//                String correctAnswer = "";
+//                out.println("Player:" + name);
+//                out.println(Q.getQuestion().getQuestion());
+//                for(Q.Answer answer : Q.getQuestion().answers) {
+//                    if(answer.correct) {
+//                        correctAnswer = answer.answer;
+//                    }
+//                    out.println(answer.answer);
+//                }
 
-                while (true) {
-                    String reply = in.readLine();
-                    if(reply.contains(name + ":")) {
-                        answered = true;
-                        answer = reply.split(":")[1];
-                    }
-                    if (answered && opponent.answered) {
-                        String[] replies = reply.split(":");
-                        if (answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
-                            out.println("Resultat: Lika!");
-                            opponent.out.println("Resultat: Lika!");
-                        } else if(answer.equals(correctAnswer) && !opponent.answer.equals(correctAnswer)) {
-                            out.println("Resultat: Du vann!");
-                            opponent.out.println("Resultat: Du Förlorade!");
-                        } else if(!answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
-                            out.println("Resultat: Du Förlorade!");
-                            opponent.out.println("Resultat: Du vann!");
-                        } else {
-                            out.println("Resultat: Du Förlorade!");
-                            opponent.out.println("Resultat: Du Förlorade!");
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println(e);
+//                while (true) {
+//                    String reply = in.readLine();
+//                    if(reply.contains(name + ":")) {
+//                        answered = true;
+//                        answer = reply.split(":")[1];
+//                    }
+//                    if (answered && opponent.answered) {
+//                        String[] replies = reply.split(":");
+//                        if (answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
+//                            out.println("Resultat: Lika!");
+//                            opponent.out.println("Resultat: Lika!");
+//                        } else if(answer.equals(correctAnswer) && !opponent.answer.equals(correctAnswer)) {
+//                            out.println("Resultat: Du vann!");
+//                            opponent.out.println("Resultat: Du Förlorade!");
+//                        } else if(!answer.equals(correctAnswer) && opponent.answer.equals(correctAnswer)) {
+//                            out.println("Resultat: Du Förlorade!");
+//                            opponent.out.println("Resultat: Du vann!");
+//                        } else {
+//                            out.println("Resultat: Du Förlorade!");
+//                            opponent.out.println("Resultat: Du Förlorade!");
+//                        }
+//                    }
+//                }
+//            } catch (IOException e) {
+//                System.out.println(e);
             } finally {
                 try {socket.close();} catch (IOException e) {}
             }
