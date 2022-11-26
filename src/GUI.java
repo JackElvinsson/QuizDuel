@@ -14,7 +14,6 @@ import java.util.Random;
 
 public class GUI extends JFrame {
 
-    //Kommentar
 
 //    MethodsGUI methodsGUI = new MethodsGUI();
 
@@ -37,6 +36,15 @@ public class GUI extends JFrame {
     protected User user = new User();
     private Random randomGenerator;
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    private Player player;
     // JFrame components
     private JPanel mainPanel;
     private JPanel startPanel;
@@ -601,6 +609,7 @@ public class GUI extends JFrame {
 
     public static void main(String[] args) throws IOException {
         new GUI();
+//        gui.getPlayer();
     }
 }
 

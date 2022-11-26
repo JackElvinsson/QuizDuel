@@ -4,8 +4,6 @@ import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 
 public class GameServer {
-
-    //Kommentar
     private ServerSocket ss;
     private int numPlayers;
     private ServerSideConnection player1;
@@ -26,7 +24,7 @@ public class GameServer {
             System.out.println("IOEXCEPTION FROM CONSTRUCTOR!");
         }
     }
-
+    
     public void acceptConnections() {
         try {
             System.out.println("Waiting for connections...");
@@ -59,14 +57,65 @@ public class GameServer {
         private DataOutputStream dataOut;
         private BufferedReader buffIn;
         private PrintWriter buffOut;
+        private ObjectInputStream in;
+        private ObjectOutputStream out;
 
 
         private int playerID;
 
+
+
         public ServerSideConnection(Socket s, int id) { //Constructor.
             socket = s;
             playerID = id;
+
             try {
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
+
+                Data data = new Data();
+                Data.player = player;
+                broadcast(data);
+
+                while (true) {
+                    Data inData = (Data) in.readObject();
+                    System.out.println("Server recieved" + indata + "from Client" + player);
+                }
+            } catch(IOException e){
+                e.printStackTrace();
+            }finally {
+                try {
+                    out.close();
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            public void broadcast(Data dataOut){
+                try{
+                    System.out.println("Server sent" + dataOut 0 "To client" + player);
+                    out.writeObject(dataOut);
+                    out.flush();
+                    out.reset();
+                    System.out.println("Server succesfull" + outData "to client" + player);
+            }catch (IOException e){
+                    e.printStackTrace();
+            }
+            }
+        }
+        public class Data implements Serializable {
+
+                public int player;
+                public String playerName;
+                public String opponentName;
+                public List<> playerOneScore;
+                public List<> opponentScore;
+            }
+        }
+
+
+
+                /*
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
                 buffIn = new BufferedReader(new InputStreamReader(
@@ -75,7 +124,7 @@ public class GameServer {
             } catch (IOException e) {
                 System.out.println("IO Exception from SSC Constructor");
             }
-        }
+        }*/
 
         public void run() { //separat run tråd för spelarna.
             try {

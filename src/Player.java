@@ -5,36 +5,27 @@ import java.net.Socket;
 
 
 public class Player extends JFrame {
-    private int width;
-    private int height;
-    private Container contentpane;
-    private JTextArea message;
-    private JButton b1;
-    private JButton b2;
-    private JButton b3;
-    private JButton b4;
     private int playerID;
     private int otherPlayer;
-    private int[] values;
-    private int maxTurns;
-    private int turnsMade;
-    private int myPoints;
-    private int enemyPoints;
-    private boolean buttonsEnabled;
-
     private String otherPlayerName;
     private String userName;
 
 
+    public String getOtherPlayerName() {
+        return otherPlayerName;
+    }
 
+    public String getPlayerName() {
+        return userName;
+    }
 
     private ClientSideConnection csc;
 
-    public Player() throws IOException {
+    public Player(String playerName)throws IOException {
+        userName=playerName;
         //används för att kalla på inner class.
-
-
     }
+
 
 
     public void connectToServer() {
@@ -131,14 +122,14 @@ public class Player extends JFrame {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        Player p = new Player();
-//        p.setUpGUI();
-        p.connectToServer(); //Göra så "till lobby kör denna metod?
-//        p.csc.sendUserName("Test Arne");
-
-//        p.setUpButtons();
-
-    }
+//    public static void main(String[] args) throws IOException {
+////        Player p = new Player();
+////        p.setUpGUI();
+//        p.connectToServer(); //Göra så "till lobby kör denna metod?
+////        p.csc.sendUserName("Test Arne");
+//
+////        p.setUpButtons();
+//
+//    }
 
 }
