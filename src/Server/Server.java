@@ -1,4 +1,7 @@
-import Questions.Question;
+package Server;
+import Client.Client;
+
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,12 +9,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.Executors;
 
 public class Server {
     public static void main(String[] args) throws Exception {
         ServerSocket listener = new ServerSocket(9999);
-        System.out.println("Server för Quizkampen kör");
+        System.out.println("Server.Server för Quizkampen kör");
         try {
             Quiz.Player waiting = null;
             Quiz quiz = new Quiz();

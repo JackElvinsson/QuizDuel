@@ -28,14 +28,14 @@
 //
 //
 //
-//public class Server implements Runnable {
+//public class Server.Server implements Runnable {
 //
 //    private ArrayList<ConnectionHandler> connections;
 //    private ServerSocket server;
 //    private boolean done;
 //    private ExecutorService pool;
 //
-//    public Server(){
+//    public Server.Server(){
 //        connections = new ArrayList<>();
 //        done = false;
 //    }
@@ -158,12 +158,12 @@
 //    }
 //
 //    public static void main(String[] args) {
-//        Server server = new Server();
+//        Server.Server server = new Server.Server();
 //        server.run();
 //    }
 //}
 //
-//public class Client implements Runnable {
+//public class Client.Client implements Runnable {
 //
 //    private Socket client;
 //    private BufferedReader in;
@@ -228,7 +228,7 @@
 //
 //    }
 //    public static void main (String[] args){
-//        Client client = new Client();
+//        Client.Client client = new Client.Client();
 //        client.run();
 //
 //    }

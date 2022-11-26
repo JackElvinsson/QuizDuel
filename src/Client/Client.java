@@ -1,4 +1,5 @@
-
+package Client;
+import Server.Server;
 
 import javax.swing.*;
 import java.awt.*;
