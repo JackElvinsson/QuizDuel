@@ -9,8 +9,10 @@ public class GameServer {
     private ServerSideConnection player1;
     private ServerSideConnection player2;
     CountDownLatch countDownLatch = new CountDownLatch(1);
-    public String player1Name = "P1";
-    public String player2Name = "P2";
+    public String player1Name = "";
+    public String player2Name = "";
+
+    public boolean threadWait = true;
 
     public GameServer() {
         System.out.println("----Game Server is running----");
@@ -77,32 +79,32 @@ public class GameServer {
             try {
                 dataOut.writeInt(playerID);   //skickar INT med vilket ID man fått. 1 || 2 till client.
                 System.out.println("Skickat playerID:" + playerID);
-                countDownLatch.await();
+//                countDownLatch.await();
                 //setname logiken.
                 while (true) {
                     if (playerID == 1) {
                         player1Name = dataIn.readUTF();
                         System.out.println("Player 1 name is set to: " + player1Name);
-                        countDownLatch.countDown();
+//                        countDownLatch.countDown();
                         break;
                     } else if (playerID == 2) {
                         player2Name = dataIn.readUTF();
                         System.out.println("Player 2 name is set to: " + player2Name);
-                        countDownLatch.countDown();
+//                        countDownLatch.countDown();
                         break;
                     }
                 }
-                System.out.println("Väntar");
 
-                //Väntar på 2 spelare.
-                if(numPlayers!=2){
-                    System.out.println("Waiting for second player");
+                synchronized (this) {
+                    while(player2Name.isBlank()) {
+                        wait(1500);
+                        System.out.println("playerID "+playerID+" waited 1,5sec");
+                    }
+                    System.out.println("Player "+playerID+" continues");
                 }
-                while(numPlayers!=2){
-//                    System.out.println("Waiting for players, number of players:"+numPlayers);
-                }
-                System.out.println("ID:" +playerID+" is Sending user name to opponent");
 
+
+                System.out.println("ID:" + playerID + " is Sending user name to opponent");
 
 
                 sendUserName();
@@ -127,7 +129,6 @@ public class GameServer {
                 } else if (playerID == 2) {
                     player2Name = dataIn.readUTF();
                     System.out.println("Player 2 name is set to: " + player2Name);
-                    sendUserName();
                     break;
                 }
 
@@ -137,15 +138,15 @@ public class GameServer {
 
 
         public void sendUserName() { //skickar useName till server
-            String opponentName="";
-            System.out.println("Player one: "+player1Name+"\nPlayer two: "+player2Name);
+            String opponentName = "";
+            System.out.println("Player one: " + player1Name + "\nPlayer two: " + player2Name);
             if (playerID == 1) {
-                opponentName=player2Name;
-            } else if (playerID == 2){
-                opponentName=player1Name;
+                opponentName = player2Name;
+            } else if (playerID == 2) {
+                opponentName = player1Name;
             }
             try {
-                System.out.println("Sending opponentName from sendUserName(), opponentName sent: "+opponentName+" and player ID is: "+playerID);
+                System.out.println("Sending opponentName from sendUserName(), opponentName sent: " + opponentName + " and player ID is: " + playerID);
                 dataOut.writeUTF(opponentName);
                 dataOut.flush();
             } catch (IOException ex) {
