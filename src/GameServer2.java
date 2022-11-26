@@ -3,7 +3,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
 
-public class GameServer {
+public class GameServer2 {
     private ServerSocket ss;
     private int numPlayers;
     private ServerSideConnection player1;
@@ -12,7 +12,7 @@ public class GameServer {
     private String player1Name = "P1";
     private String player2Name = "P2";
 
-    public GameServer() {
+    public GameServer2() {
         System.out.println("----Game Server is running----");
 
 

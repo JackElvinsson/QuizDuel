@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 
-public class Player extends JFrame {
+public class Player2 extends JFrame {
     private int width;
     private int height;
     private Container contentpane;
@@ -25,10 +25,9 @@ public class Player extends JFrame {
     private String otherPlayerName;
 
 
-
     private ClientSideConnection csc;
 
-    public Player() throws IOException {
+    public Player2() throws IOException {
         //används för att kalla på inner class.
 
 
@@ -72,7 +71,7 @@ public class Player extends JFrame {
                 }
 
                 System.out.println("My id is: " + playerID);
-                sendUserName("ADAM");
+                sendUserName("BEATA");
                 receiveName();
 
                 System.out.println("Opponent name: " + otherPlayerName);
@@ -130,7 +129,7 @@ public class Player extends JFrame {
     }
 
     public static void main(String[] args) throws IOException {
-        Player p = new Player();
+        Player2 p = new Player2();
 //        p.setUpGUI();
         p.connectToServer(); //Göra så "till lobby kör denna metod?
 //        p.csc.sendUserName("Test Arne");
