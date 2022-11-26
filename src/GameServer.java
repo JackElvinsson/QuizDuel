@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 
 public class GameServer {
     private ServerSocket ss;
@@ -83,8 +84,8 @@ public class GameServer {
                         System.out.println("Player 1 name is set to: " + player1Name);
                         break;
                     } else if (playerID == 2) {
-                        player2Name = String.valueOf(dataIn.readByte());
-                        System.out.println("Player 2 name is set to: " + player1Name);
+                        player2Name = dataIn.readUTF();
+                        System.out.println("Player 2 name is set to: " + player2Name);
                         break;
                     }
                 }
@@ -113,7 +114,7 @@ public class GameServer {
                     break;
                 } else if (playerID == 2) {
                     player2Name = dataIn.readUTF();
-                    System.out.println("Player 2 name is set to: " + player1Name);
+                    System.out.println("Player 2 name is set to: " + player2Name);
                     sendUserName();
                     break;
                 }
@@ -121,7 +122,6 @@ public class GameServer {
             }
 
         }
-
 
         public void sendUserName() { //skickar useName till server
             String opponentName="";
@@ -154,4 +154,33 @@ public class GameServer {
         GameServer gs = new GameServer();
         gs.acceptConnections();
     }
+}
+
+
+public class Server implements Runnable {
+
+    @Override
+    public void run() {
+        int port = 9999;
+
+        try (ServerSocket sSocket = new ServerSocket(port)) {
+            while (true) {
+
+                ServerConnection player1 = new ServerConnection(sSocket.accept(), game, 1);
+                ServerConnection player2 = new ServerConnection(sSocket.accept(), game, 2);
+
+                game.setPlayers(p1, p2);
+
+                new Thread(player1).start();
+                new Thread(player2).start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new Thread(new Server()).start();
+    }
+}
 }

@@ -25,6 +25,7 @@ public class Player extends JFrame {
     private String otherPlayerName;
 
 
+
     private ClientSideConnection csc;
 
     public Player() throws IOException {
