@@ -2,23 +2,24 @@ import Client.Client;
 import Questions.Categories.Kategori;
 import Questions.Question;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GUI extends JFrame {
 
+
 //    MethodsGUI methodsGUI = new MethodsGUI();
 
     boolean isReady = false;
-    Client client = new Client();
+    //    Client client = new Client();
     GameInit gameInit = new GameInit();
     List<Kategori> categoryList = gameInit.getCategoryList();
     List<Kategori> categoryOptions = gameInit.getCategoryOptions();
@@ -36,6 +37,15 @@ public class GUI extends JFrame {
     protected User user = new User();
     private Random randomGenerator;
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    private Player player;
     // JFrame components
     private JPanel mainPanel;
     private JPanel startPanel;
@@ -71,6 +81,7 @@ public class GUI extends JFrame {
     private JLabel playerCurrentScore;
     private JLabel opponentCurrentScore;
     private JButton fourthCategory;
+
 
     Border border = new BevelBorder(BevelBorder.RAISED);
 
@@ -131,7 +142,7 @@ public class GUI extends JFrame {
         tillLobbyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.userName = (user.getName());
+                userName.setText(user.getName());
 
                 if (user.getName().equals("")) {
                     JOptionPane.showMessageDialog(null, "Välj ett namn och tryck\nenter för att registrera", "Meddelande", JOptionPane.INFORMATION_MESSAGE);
@@ -139,7 +150,18 @@ public class GUI extends JFrame {
                 } else {
                     changeScene(startPanel, lobbyPanel);
                 }
-                client.run();
+
+                try {
+                    Player player = new Player(user.getName());
+                    setPlayer(player);
+
+                    player.connectToServer();
+                    while (oppName.getText().equals("Spelare2")) {
+                        oppName.setText(getPlayer().getOtherPlayerName());
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -168,8 +190,6 @@ public class GUI extends JFrame {
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-
             }
         });
 
@@ -181,7 +201,6 @@ public class GUI extends JFrame {
                 changeScene(lobbyPanel, startPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
             }
         });
 
@@ -196,8 +215,7 @@ public class GUI extends JFrame {
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(0));
-
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(0));
             }
         });
 
@@ -212,8 +230,7 @@ public class GUI extends JFrame {
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(1));
-
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(1));
             }
         });
 
@@ -228,8 +245,7 @@ public class GUI extends JFrame {
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(2));
-
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(2));
             }
         });
 
@@ -244,8 +260,7 @@ public class GUI extends JFrame {
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(3));
-
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(3));
             }
         });
 
@@ -265,7 +280,7 @@ public class GUI extends JFrame {
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
                     String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer,firstAnswer);
+                    markUserAnswer(correctAnswer, firstAnswer);
                 }
             }
         });
@@ -286,7 +301,7 @@ public class GUI extends JFrame {
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
                     String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer,secondAnswer);
+                    markUserAnswer(correctAnswer, secondAnswer);
                 }
             }
         });
@@ -307,7 +322,7 @@ public class GUI extends JFrame {
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
                     String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer,thirdAnswer);
+                    markUserAnswer(correctAnswer, thirdAnswer);
                 }
             }
         });
@@ -328,7 +343,7 @@ public class GUI extends JFrame {
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
                     String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer,fourthAnswer);
+                    markUserAnswer(correctAnswer, fourthAnswer);
                 }
             }
         });
@@ -340,7 +355,6 @@ public class GUI extends JFrame {
                 changeScene(waitingPanel, lobbyPanel);
 
                 //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
-
             }
         });
 
@@ -371,7 +385,6 @@ public class GUI extends JFrame {
                 secondAnswer.setBackground(new Color(0, 102, 204));
                 thirdAnswer.setBackground(new Color(0, 102, 204));
                 fourthAnswer.setBackground(new Color(0, 102, 204));
-
             }
         });
 
@@ -382,8 +395,8 @@ public class GUI extends JFrame {
                 //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
             }
         });
-
     }
+
 
 //    public boolean correctAnswer(){
 //
@@ -490,14 +503,13 @@ public class GUI extends JFrame {
     }
 
 
-public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
+    public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
 
         questionTextArea.setText(categoryOptions.get(i).getListOfQuestions().get(0).getQuestionText());
         firstAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer1().getAnswerText());
         secondAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer2().getAnswerText());
         thirdAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer3().getAnswerText());
         fourthAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer4().getAnswerText());
-
     }
 
     public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
@@ -528,20 +540,17 @@ public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea ques
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getAnswerText());
             return firstAnswer.getText();
-        }
-        else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getIsAnswerCorrect()) {
+        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getIsAnswerCorrect()) {
             secondAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getAnswerText());
             return secondAnswer.getText();
-        }
-        else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getIsAnswerCorrect()) {
+        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getIsAnswerCorrect()) {
             thirdAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getAnswerText());
             return thirdAnswer.getText();
-        }
-        else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getIsAnswerCorrect()) {
+        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getIsAnswerCorrect()) {
             fourthAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getAnswerText());
@@ -550,9 +559,9 @@ public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea ques
             return null;
     }
 
-        public void markUserAnswer(String correctAnswer, JButton answer) {
+    public void markUserAnswer(String correctAnswer, JButton answer) {
 
-        if(!answer.getText().equals(correctAnswer)){
+        if (!answer.getText().equals(correctAnswer)) {
             answer.setBackground(Color.red);
         } else {
             answer.setBackground(Color.green);
@@ -600,7 +609,9 @@ public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea ques
 //    }
 
     public static void main(String[] args) throws IOException {
-        new Client();
         new GUI();
+//        gui.getPlayer();
     }
 }
+
+
