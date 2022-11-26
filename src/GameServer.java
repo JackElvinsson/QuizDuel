@@ -94,6 +94,7 @@ public class GameServer {
                 }
                 while(numPlayers!=2){
                 }
+                System.out.println("Sending user name to opponent");
                 sendUserName();
 
 
@@ -131,6 +132,7 @@ public class GameServer {
                 opponentName=player1Name;
             }
             try {
+                System.out.println("Sending opponentName from sendUserName(), opponentName sent: "+opponentName+" and player ID is: "+playerID);
                 dataOut.writeUTF(opponentName);
                 dataOut.flush();
             } catch (IOException ex) {

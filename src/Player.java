@@ -29,12 +29,14 @@ public class Player extends JFrame {
 
     public Player() throws IOException {
         //används för att kalla på inner class.
-    }
 
+
+    }
 
 
     public void connectToServer() {
         csc = new ClientSideConnection();
+
     }
 
 
@@ -60,17 +62,19 @@ public class Player extends JFrame {
                 /////////////////////////////////////////////////////////////////
 
 
-
                 playerID = dataIn.readInt(); //Läser in playerID från server
+                //sätter other player beroende på vilket ID man fått.
+                if (playerID == 1) {
+                    otherPlayer = 2;
+                } else {
+                    otherPlayer = 1;
+                }
 
-                System.out.println("My id is: "+playerID);
+                System.out.println("My id is: " + playerID);
                 sendUserName("Test-Bea");
                 receiveName();
 
-                System.out.println("Opponent name: "+otherPlayerName);
-
-
-
+                System.out.println("Opponent name: " + otherPlayerName);
 
 
             } catch (IOException e) {
@@ -79,49 +83,46 @@ public class Player extends JFrame {
         }
 
 
+        /**
+         * Metod för att skicka till servern vad man har för användarnamn.
+         * <p>
+         * Inparaametern ska vara det som man har valt i GUI't.
+         */
 
-    /**
-     * Metod för att skicka till servern vad man har för användarnamn.
-     *
-     * Inparaametern ska vara det som man har valt i GUI't.
-     *
-     * */
+        public void sendUserName(String chosenName) { //Inparameter är namnet som använder väljer i GUI't.
 
-        public void sendUserName(String chosenName){ //Inparameter är namnet som använder väljer i GUI't.
-
-            try{
-                System.out.println("Försöker skicka namn, "+chosenName+" till server");
+            try {
+                System.out.println("Försöker skicka namn, " + chosenName + " till server");
                 dataOut.writeUTF(chosenName);
                 System.out.println("Skickat namnet");
                 dataOut.flush();
 
-            }catch (IOException ex) {
+            } catch (IOException ex) {
                 System.out.println("IOException from sendUserName() CSC");
             }
 
         }
 
 
-    public void receiveName() {
-        String opponentName = "";
-        while(opponentName.equals("")){
-        try {
-            opponentName = dataIn.readUTF();
-            System.out.println("player:" + otherPlayer + " sent username:" +opponentName);
-        } catch (IOException ex) {
-            System.out.println("IOException from receiveName() csc");
+        public void receiveName() {
+            String opponentName = "";
+            while (opponentName.equals("")) {
+                try {
+                    opponentName = dataIn.readUTF();
+                    System.out.println("player:" + otherPlayer + " sent username:" + opponentName);
+                } catch (IOException ex) {
+                    System.out.println("IOException from receiveName() csc");
+                }
+            }
+            otherPlayerName = opponentName;
         }
-        }
-        otherPlayerName =opponentName;
-    }
 
 
-
-        public void closeConnection(){
-            try{
+        public void closeConnection() {
+            try {
                 socket.close();
                 System.out.println("Connection closed");
-            }catch (IOException ex){
+            } catch (IOException ex) {
                 System.out.println("IOException on closeConnection");
             }
         }
