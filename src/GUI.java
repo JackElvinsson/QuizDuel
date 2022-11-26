@@ -17,7 +17,7 @@ public class GUI extends JFrame {
 //    MethodsGUI methodsGUI = new MethodsGUI();
 
     boolean isReady = false;
-    Client client = new Client();
+//    Client client = new Client();
     GameInit gameInit = new GameInit();
     List<Kategori> categoryList = gameInit.getCategoryList();
     List<Kategori> categoryOptions = gameInit.getCategoryOptions();
@@ -130,7 +130,7 @@ public class GUI extends JFrame {
         tillLobbyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.userName = (user.getName());
+                userName.setText(user.getName());
 
                 if (user.getName().equals("")) {
                     JOptionPane.showMessageDialog(null, "Välj ett namn och tryck\nenter för att registrera", "Meddelande", JOptionPane.INFORMATION_MESSAGE);
@@ -138,7 +138,6 @@ public class GUI extends JFrame {
                 } else {
                     changeScene(startPanel, lobbyPanel);
                 }
-                client.run();
             }
         });
 
@@ -599,7 +598,6 @@ public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea ques
 //    }
 
     public static void main(String[] args) throws IOException {
-        new Client();
         new GUI();
     }
 }
