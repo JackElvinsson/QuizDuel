@@ -127,7 +127,6 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
-
             }
         });
 
@@ -138,7 +137,6 @@ public class GUI extends JFrame {
                 if(!textField1.getText().isBlank()) {
                     tillLobbyButton.setEnabled(true);
                 }
-
             }
         });
 
