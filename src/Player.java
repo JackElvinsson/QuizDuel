@@ -23,6 +23,8 @@ public class Player extends JFrame {
     private boolean buttonsEnabled;
 
     private String otherPlayerName;
+    private String userName;
+
 
 
 
@@ -72,7 +74,7 @@ public class Player extends JFrame {
                 }
 
                 System.out.println("My id is: " + playerID);
-                sendUserName("ADAM");
+                sendUserName(userName);
                 receiveName();
 
                 System.out.println("Opponent name: " + otherPlayerName);
