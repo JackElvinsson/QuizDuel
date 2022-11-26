@@ -53,7 +53,7 @@ public class Player extends JFrame {
         public ClientSideConnection() {
             System.out.println("---Client---");
             try {
-                socket = new Socket("localhost", 52734);
+                socket = new Socket("localhost", 52732);
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
                 ////////////////////////////////////////////////////////////////

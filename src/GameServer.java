@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Properties;
 
 public class GameServer {
     private ServerSocket ss;
@@ -9,15 +8,15 @@ public class GameServer {
     private ServerSideConnection player1;
     private ServerSideConnection player2;
 
-    private String player1Name = "P1";
-    private String player2Name = "P2";
+    public String player1Name = "P1";
+    public String player2Name = "P2";
 
     public GameServer() {
         System.out.println("----Game Server is running----");
 
 
         try {
-            ss = new ServerSocket(52734);
+            ss = new ServerSocket(52732);
         } catch (IOException e) {
             System.out.println("IOEXCEPTION FROM CONSTRUCTOR!");
         }
@@ -112,6 +111,7 @@ public class GameServer {
 
         public void setName() throws IOException {
 //            try {
+
             while (true) {
                 if (playerID == 1) {
                     player1Name = dataIn.readUTF();
@@ -127,6 +127,7 @@ public class GameServer {
             }
 
         }
+
 
         public void sendUserName() { //skickar useName till server
             String opponentName="";
@@ -160,32 +161,3 @@ public class GameServer {
         gs.acceptConnections();
     }
 }
-
-//
-//public class Server implements Runnable {
-//
-//    @Override
-//    public void run() {
-//        int port = 9999;
-//
-//        try (ServerSocket sSocket = new ServerSocket(port)) {
-//            while (true) {
-//
-//                ServerConnection player1 = new ServerConnection(sSocket.accept(), game, 1);
-//                ServerConnection player2 = new ServerConnection(sSocket.accept(), game, 2);
-//
-//                game.setPlayers(p1, p2);
-//
-//                new Thread(player1).start();
-//                new Thread(player2).start();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public static void main(String[] args) {
-//        new Thread(new Server()).start();
-//    }
-//}
-//}
