@@ -166,8 +166,6 @@ public class GUI extends JFrame {
 
                 //TODO: Uppdatera Fråga och svarsalternativ
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-
             }
         });
 
@@ -179,7 +177,6 @@ public class GUI extends JFrame {
                 changeScene(lobbyPanel, startPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
             }
         });
 
@@ -195,7 +192,6 @@ public class GUI extends JFrame {
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
                 gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(0));
-
             }
         });
 
@@ -211,7 +207,6 @@ public class GUI extends JFrame {
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
                 gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(1));
-
             }
         });
 
@@ -227,7 +222,6 @@ public class GUI extends JFrame {
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
                 gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(2));
-
             }
         });
 
@@ -243,7 +237,6 @@ public class GUI extends JFrame {
 
                 setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
                 gameInit.makeNotChosenCategoryAvailable(categoryOptions,categoryOptions.get(3));
-
             }
         });
 
@@ -338,7 +331,6 @@ public class GUI extends JFrame {
                 changeScene(waitingPanel, lobbyPanel);
 
                 //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
-
             }
         });
 
@@ -369,7 +361,6 @@ public class GUI extends JFrame {
                 secondAnswer.setBackground(new Color(0, 102, 204));
                 thirdAnswer.setBackground(new Color(0, 102, 204));
                 fourthAnswer.setBackground(new Color(0, 102, 204));
-
             }
         });
 
@@ -380,7 +371,6 @@ public class GUI extends JFrame {
                 //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
             }
         });
-
     }
 
 //    public boolean correctAnswer(){

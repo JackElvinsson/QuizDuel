@@ -1,13 +1,14 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.CountDownLatch;
 
 public class GameServer {
     private ServerSocket ss;
     private int numPlayers;
     private ServerSideConnection player1;
     private ServerSideConnection player2;
-
+    CountDownLatch countDownLatch = new CountDownLatch(1);
     public String player1Name = "P1";
     public String player2Name = "P2";
 
@@ -16,7 +17,7 @@ public class GameServer {
 
 
         try {
-            ss = new ServerSocket(52732);
+            ss = new ServerSocket(52731);
         } catch (IOException e) {
             System.out.println("IOEXCEPTION FROM CONSTRUCTOR!");
         }
@@ -39,6 +40,7 @@ public class GameServer {
                 }
                 Thread t = new Thread(ssc);
                 t.start();
+
             }
             System.out.println("We now have two players, no longer accepting connections");
         } catch (IOException e) {
@@ -75,26 +77,29 @@ public class GameServer {
             try {
                 dataOut.writeInt(playerID);   //skickar INT med vilket ID man fått. 1 || 2 till client.
                 System.out.println("Skickat playerID:" + playerID);
-
+                countDownLatch.await();
                 //setname logiken.
                 while (true) {
                     if (playerID == 1) {
                         player1Name = dataIn.readUTF();
                         System.out.println("Player 1 name is set to: " + player1Name);
+                        countDownLatch.countDown();
                         break;
                     } else if (playerID == 2) {
                         player2Name = dataIn.readUTF();
                         System.out.println("Player 2 name is set to: " + player2Name);
+                        countDownLatch.countDown();
                         break;
                     }
                 }
+                System.out.println("Väntar");
 
                 //Väntar på 2 spelare.
                 if(numPlayers!=2){
                     System.out.println("Waiting for second player");
                 }
                 while(numPlayers!=2){
-                    System.out.println("Waiting for players, number of players:"+numPlayers);
+//                    System.out.println("Waiting for players, number of players:"+numPlayers);
                 }
                 System.out.println("ID:" +playerID+" is Sending user name to opponent");
 
@@ -105,6 +110,8 @@ public class GameServer {
 
             } catch (IOException e) {
                 System.out.println("IOException from run() SSC");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 
