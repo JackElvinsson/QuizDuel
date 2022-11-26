@@ -135,6 +135,9 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 user.setName(textField1.getText());
+                if(!textField1.getText().isBlank()) {
+                    tillLobbyButton.setEnabled(true);
+                }
 
             }
         });
