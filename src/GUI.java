@@ -14,6 +14,7 @@ import java.util.Random;
 
 public class GUI extends JFrame {
 
+    //Kommentar
 
 //    MethodsGUI methodsGUI = new MethodsGUI();
 

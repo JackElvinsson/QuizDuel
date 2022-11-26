@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GameInit {
 
-
+//Kommentar
     QuestionInit qInit = new QuestionInit();
     List<Kategori> categoryList = qInit.getCategories();
 

@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 
 public class GameServer {
+
+    //Kommentar
     private ServerSocket ss;
     private int numPlayers;
     private ServerSideConnection player1;
