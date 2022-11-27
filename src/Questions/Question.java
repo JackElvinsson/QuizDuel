@@ -43,7 +43,15 @@ public class Question {
         return answer4;
     }
 
-    public boolean isUsed() {
+    public Boolean getUsed() {
+        return used;
+    }
+
+    public void setUsed(Boolean used) {
+        this.used = used;
+    }
+
+    public boolean isUsed()  {
         return used;
     }
 
@@ -52,7 +60,7 @@ public class Question {
      * Takes all existing answers for the question and shuffles them.
      *
      */
-    public void shuffleQuestions() {
+    public void shuffleQAnswers() {
         List<Answer> answersList=new ArrayList<>();
         answersList.add(answer1);
         answersList.add(answer2);
