@@ -147,7 +147,6 @@ public class GUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Välj ett namn och tryck\nenter för att registrera", "Meddelande", JOptionPane.INFORMATION_MESSAGE);
 
                 } else {
-
                     changeScene(startPanel, lobbyPanel);
                 }
 
@@ -166,6 +165,10 @@ public class GUI extends JFrame {
             }
         });
 
+        /**
+         * Vad som händer när man trycker på SPELA knappen.
+         * */
+
         spela.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -179,6 +182,7 @@ public class GUI extends JFrame {
 
                     setCategories(player.getCategoryOptions(), firstCategory, secondCategory, thirdCategory, fourthCategory);
                     changeScene(lobbyPanel, categoryPanel);
+
 
 
                     //TODO: Nästa spelare får välja kategori
@@ -208,12 +212,13 @@ public class GUI extends JFrame {
                 categoryTracker = 0;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
-                selectedCategory = player.getCategoryOptions().get(0);
+                selectedItem = player.getCategoryOptions().get(categoryTracker);
+                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                player.setSelectedCategory(selectedCategory);
+//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -224,12 +229,13 @@ public class GUI extends JFrame {
                 categoryTracker = 1;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
-                selectedCategory = player.getCategoryOptions().get(1);
+                selectedItem = player.getCategoryOptions().get(categoryTracker);
+                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                player.setSelectedCategory(selectedCategory);
+//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -240,12 +246,13 @@ public class GUI extends JFrame {
                 categoryTracker = 2;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
-                selectedCategory = player.getCategoryOptions().get(2);
+                selectedItem = player.getCategoryOptions().get(categoryTracker);
+                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                player.setSelectedCategory(selectedCategory);
+//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -256,12 +263,13 @@ public class GUI extends JFrame {
                 categoryTracker = 3;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
-                selectedCategory = player.getCategoryOptions().get(3);
+                selectedItem = player.getCategoryOptions().get(categoryTracker);
+                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                player.setSelectedCategory(selectedCategory);
+//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -508,9 +516,9 @@ public class GUI extends JFrame {
 
         questionTextArea.setText(player.getListOfQuestions().get(0).getQuestionText());
         firstAnswer.setText(player.getListOfQuestions().get(0).getAnswer1().getAnswerText());
-        secondAnswer.setText(player.getListOfQuestions().get(0).getAnswer2().getAnswerText());
-        thirdAnswer.setText(player.getListOfQuestions().get(0).getAnswer3().getAnswerText());
-        fourthAnswer.setText(player.getListOfQuestions().get(0).getAnswer4().getAnswerText());
+        secondAnswer.setText(player.getListOfQuestions().get(1).getAnswer2().getAnswerText());
+        thirdAnswer.setText(player.getListOfQuestions().get(2).getAnswer3().getAnswerText());
+        fourthAnswer.setText(player.getListOfQuestions().get(3).getAnswer4().getAnswerText());
     }
 
     //TODO Lägg till dynamiskt antal frågor

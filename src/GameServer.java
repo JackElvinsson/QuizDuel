@@ -20,8 +20,7 @@ public class GameServer {
     public boolean threadWait = true;
     GameInit gameInit = new GameInit();
     private List<Kategori> categoryOptions = gameInit.getCategoryOptions();
-    List<Question> listOfQuestions;
-
+    private List<Question> listOfQuestions;
 
 
     public GameServer() throws IOException {
@@ -134,6 +133,14 @@ public class GameServer {
 //                    player2.sendButtonNum(player1ButtonNum);
                     sendListOfCategoryOptions(categoryOptions);
                 }
+                Thread t2 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        waitingForData();
+                    }
+                });
+                t2.start();
+
 //                } else {
 //                    player2ButtonNum = dataIn.readInt();
 //                    System.out.println("Player 2 clicked button#" + player2ButtonNum);
@@ -190,47 +197,77 @@ public class GameServer {
             }
         }
 
-        public List<Question> retrieveSelectedList(){
+        public void syncQuestionList(List<Kategori> selectedList, Kategori selectedItem) {
+
+//                List<Kategori> selectedList = (List<Kategori>) ois.readObject();
+//                Kategori selectedItem = (Kategori) ois.readObject();
+            gameInit.makeNotChosenCategoryAvailable(selectedList, selectedItem);
+            listOfQuestions = gameInit.getQuestions(gameInit.selectedCategory, 3);
+
+            //TODO Lägg till hantering av antal frågor ifrån properties
+        }
+
+
+
+    public void sendQuestions() {
+        try {
+            oos.writeObject(listOfQuestions);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void waitingForData() {
+    String s;
+        while (true) {
 
             try {
-
-                List<Kategori> selectedList = (List<Kategori>) ois.readObject();
-                Kategori selectedItem = (Kategori) ois.readObject();
-                gameInit.makeNotChosenCategoryAvailable(selectedList, selectedItem);
-
-                listOfQuestions = gameInit.getQuestions(gameInit.selectedCategory, 3);
-
-                //TODO Lägg till hantering av antal frågor ifrån properties
+                s = (String) ois.readObject();
+                System.out.println("String s = "+s);
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            return listOfQuestions;
-        }
+            if (s.equals("sendListBackToServer")) {
+                try {
+                    System.out.println("Försöker ta emot lista och objekt");
+                    List<Kategori> selectedList = (List<Kategori>) ois.readObject();
+                    System.out.println("fått tillbaka listan med kategorier.");
 
-        public void sendQuestions() {
-            try {
-                oos.writeObject(listOfQuestions);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+                    Kategori selectedItem = (Kategori) ois.readObject();
+                    System.out.println("Tagit emot 'selectedItem' försöker sätta ChosenCategory\n selectedItem är:");
+                    System.out.println(selectedItem.getCategoryName());
 
-        public void closeConnection() {
-            try {
-                socket.close();
-                System.out.println("Connection closed");
-            } catch (IOException ex) {
-                System.out.println("IOException on closeConnection");
+                    gameInit.setSelectedCategory(selectedItem);
+                    System.out.println("ChosenCategory satt");
+                    syncQuestionList(selectedList, selectedItem);
+                    System.out.println("Har tagit emot lista och objekt");
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
-        public static void main(String[] args) throws IOException {
-            GameServer gs = new GameServer();
-            gs.acceptConnections();
+    public void closeConnection() {
+        try {
+            socket.close();
+            System.out.println("Connection closed");
+        } catch (IOException ex) {
+            System.out.println("IOException on closeConnection");
         }
     }
+
+}
+
+    public static void main(String[] args) throws IOException {
+        GameServer gs = new GameServer();
+        gs.acceptConnections();
+    }
+}
 

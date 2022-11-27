@@ -75,26 +75,5 @@ public class GameInit implements Serializable {
     public void skrivnågot() {
         System.out.println("Ser båda klienter?");
     }
-
-
-    public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
-
-        questionTextArea.setText(categoryOptions.get(i).getListOfQuestions().get(0).getQuestionText());
-        firstAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer1().getAnswerText());
-        secondAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer2().getAnswerText());
-        thirdAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer3().getAnswerText());
-        fourthAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer4().getAnswerText());
-    }
-
-    public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
-
-
-        firstCategory.setText(categoryOptions.get(0).getCategoryName());
-        secondCategory.setText(categoryOptions.get(1).getCategoryName());
-        thirdCategory.setText(categoryOptions.get(2).getCategoryName());
-        fourthCategory.setText(categoryOptions.get(3).getCategoryName());
-    }
-
-
 }
 
