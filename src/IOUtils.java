@@ -15,7 +15,7 @@ public class IOUtils {
 
         List<Kategori> kategoriList;
 
-        try (Socket socket = new Socket("127.0.0.1", 44444);
+        try (Socket socket = new Socket("127.0.0.1", 52731);
              ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())) {
 

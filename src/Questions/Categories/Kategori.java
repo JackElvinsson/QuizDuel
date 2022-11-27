@@ -3,6 +3,7 @@ package Questions.Categories;
 import Questions.Answer;
 import Questions.Question;
 
+import javax.security.sasl.SaslServer;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public abstract class Kategori {
+public abstract class Kategori implements Serializable {
 
 
     private String categoryName;

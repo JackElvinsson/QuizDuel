@@ -3,6 +3,7 @@ import Questions.Categories.Kategori;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -17,7 +18,6 @@ public class GameServer {
 
     public boolean threadWait = true;
     GameInit gameInit = new GameInit();
-
 
 
     public GameServer() throws IOException {
@@ -63,7 +63,8 @@ public class GameServer {
         private DataOutputStream dataOut;
         private BufferedReader buffIn;
         private PrintWriter buffOut;
-
+        ObjectOutputStream oos;
+        ObjectInputStream ois;
 
         private int playerID;
 
@@ -72,13 +73,17 @@ public class GameServer {
             socket = s;
             playerID = id;
 
-            try (ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-                 ObjectInputStream ois = new ObjectInputStream(s.getInputStream())) {
+            try {
+
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
+//                oos = new ObjectOutputStream(socket.getOutputStream());
+//                ois = new ObjectInputStream(socket.getInputStream());
+
 //                buffIn = new BufferedReader(new InputStreamReader(
 //                        socket.getInputStream()));
 //                buffOut = new PrintWriter(socket.getOutputStream(), true);
+
             } catch (IOException e) {
                 System.out.println("IO Exception from SSC Constructor");
             }
@@ -105,19 +110,24 @@ public class GameServer {
                 }
 
                 synchronized (this) {
-                    while(player2Name.isBlank()) {
+                    while (player2Name.isBlank()) {
                         wait(1500);
-                        System.out.println("playerID "+playerID+" waited 1,5sec");
+                        System.out.println("playerID " + playerID + " waited 1,5sec");
                     }
-                    System.out.println("Player "+playerID+" continues");
+                    System.out.println("Player " + playerID + " continues");
                 }
 
 
                 System.out.println("ID:" + playerID + " is Sending username to opponent");
 
-
                 sendUserName();
-                sendList(gameInit.getCategoryList());
+
+                if (playerID == 1) {
+
+                    sendObject(gameInit.getCategoryList());
+                    System.out.println("kommer till send object");
+                    sendList(gameInit.getCategoryList(), socket);
+                }
 
 
             } catch (IOException e) {
@@ -174,19 +184,35 @@ public class GameServer {
             }
         }
 
-        public void sendList(List<Kategori> kategoriList) throws IOException {
 
-            ServerSocket ss1 = new ServerSocket(44444);
-            Socket s1 = ss1.accept();
-            try(ObjectOutputStream oos = new ObjectOutputStream(s1.getOutputStream());
-                ObjectInputStream ois = new ObjectInputStream(s1.getInputStream())) {
+        /////////////////// OBJECT STREAM TEST ///////////////////////////////////////////
+        public void sendObject(Object outObject) {
+            try {
+                System.out.println("Server tries to send " + outObject + " to client " + "player: " + playerID);
+                oos.writeObject(outObject);
+                oos.flush();
+                oos.reset();
+                System.out.println("Server not sucsessful to send" + outObject + " to client " + "player: " + playerID);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-                oos.writeObject(kategoriList);
+
+        /////////////////// OBJECT STREAM TEST ///////////////////////////////////////////
+        public void sendList(List<Kategori> kategoriList, Socket s) throws IOException {
+
+            try (ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+                 ObjectInputStream in = new ObjectInputStream(s.getInputStream()))  {
+
+                System.out.println("Kommer till innan output");
+
+                out.writeObject(kategoriList);
+
                 System.out.println(kategoriList.get(0).getCategoryName());
                 System.out.println(kategoriList.get(1).getCategoryName());
                 System.out.println(kategoriList.get(2).getCategoryName());
                 System.out.println(kategoriList.get(3).getCategoryName());
-
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
