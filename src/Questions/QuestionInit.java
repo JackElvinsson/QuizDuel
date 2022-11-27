@@ -4,12 +4,13 @@ import Questions.Categories.*;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionInit {
+public class QuestionInit implements Serializable{
 
 
     final Path AllmäntPath = Paths.get("src/Questions/Files/Allmänt.txt");

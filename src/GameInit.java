@@ -4,11 +4,12 @@ import Questions.QuestionInit;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GameInit {
+public class GameInit implements Serializable {
 
 
     QuestionInit qInit = new QuestionInit();

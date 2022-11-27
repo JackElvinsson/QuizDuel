@@ -1,6 +1,9 @@
+import Questions.Categories.Kategori;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class GameServer {
@@ -13,8 +16,11 @@ public class GameServer {
     public String player2Name = "";
 
     public boolean threadWait = true;
+    GameInit gameInit = new GameInit();
 
-    public GameServer() {
+
+
+    public GameServer() throws IOException {
         System.out.println("----Game Server is running----");
 
 
@@ -104,10 +110,11 @@ public class GameServer {
                 }
 
 
-                System.out.println("ID:" + playerID + " is Sending user name to opponent");
+                System.out.println("ID:" + playerID + " is Sending username to opponent");
 
 
                 sendUserName();
+                sendList(gameInit.getCategoryList());
 
 
             } catch (IOException e) {
@@ -162,9 +169,28 @@ public class GameServer {
                 System.out.println("IOException on closeConnection");
             }
         }
+
+        public void sendList(List<Kategori> kategoriList) throws IOException {
+
+            ss = new ServerSocket(44444);
+            Socket s = ss.accept();
+            try(ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(s.getInputStream())) {
+
+                oos.writeObject(kategoriList);
+                System.out.println(kategoriList.get(0).getCategoryName());
+                System.out.println(kategoriList.get(1).getCategoryName());
+                System.out.println(kategoriList.get(2).getCategoryName());
+                System.out.println(kategoriList.get(3).getCategoryName());
+
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         GameServer gs = new GameServer();
         gs.acceptConnections();
     }

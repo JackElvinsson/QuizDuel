@@ -3,10 +3,11 @@ package Questions.Categories;
 import Questions.Question;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
 
-public class ReligionMytologi extends Kategori {
+public class ReligionMytologi extends Kategori implements Serializable {
 
     public ReligionMytologi(String categoryName, Path filePathforQuestionsFile) throws IOException {
         super(categoryName);

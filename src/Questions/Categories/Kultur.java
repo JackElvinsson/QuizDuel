@@ -3,10 +3,11 @@ package Questions.Categories;
 import Questions.Question;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
 
-public class Kultur extends Kategori {
+public class Kultur extends Kategori implements Serializable {
 
     public Kultur(String categoryName, Path filePathforQuestionsFile) throws IOException {
         super(categoryName);

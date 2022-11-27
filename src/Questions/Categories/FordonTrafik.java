@@ -3,10 +3,11 @@ package Questions.Categories;
 import Questions.Question;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
 
-public class FordonTrafik extends Kategori {
+public class FordonTrafik extends Kategori implements Serializable {
 
     public FordonTrafik(String categoryName, Path filePathforQuestionsFile) throws IOException {
         super(categoryName);

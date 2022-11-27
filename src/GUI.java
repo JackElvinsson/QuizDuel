@@ -20,6 +20,7 @@ public class GUI extends JFrame {
 
     boolean isReady = false;
     //    Client client = new Client();
+    IOUtils ioUtils = new IOUtils();
     GameInit gameInit = new GameInit();
     List<Kategori> categoryList = gameInit.getCategoryList();
     List<Kategori> categoryOptions = gameInit.getCategoryOptions();
@@ -174,7 +175,7 @@ public class GUI extends JFrame {
 
                 changeScene(lobbyPanel, categoryPanel);
 
-                setCategories(categoryOptions, firstCategory, secondCategory, thirdCategory, fourthCategory);
+                setCategories(ioUtils.fetchList(), firstCategory, secondCategory, thirdCategory, fourthCategory);
 
 
 //                if (isChoosing) {
@@ -514,19 +515,6 @@ public class GUI extends JFrame {
     }
 
     public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
-
-        //Generate 4 nonrecurring numbers
-
-//        int[] intArray = new int[4];
-//        int counter = 0;
-//
-//        for (int i = 0; i < 4; i++) {
-//            int j = generateRandomCategoryIndex(categoryOptions);
-//            if (j != intArray[0] || j != intArray[1] || j != intArray[2] || j != intArray[3] ) {
-//                intArray[counter] = j;
-//                counter++;
-//            }
-//        }
 
         firstCategory.setText(categoryOptions.get(0).getCategoryName());
         secondCategory.setText(categoryOptions.get(1).getCategoryName());
