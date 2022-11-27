@@ -18,8 +18,11 @@ public abstract class Kategori {
     private String categoryName;
     private List<Question> listOfQuestions;
     Path fileWithQuestions;
-    Boolean used=false;
+    Boolean used = false;
 
+    public Kategori(){
+
+    }
 
     /**
      * Creates an Array list of the class Question from a file. To use, first call created object of the type QuestionCategory or it's subclasses.
@@ -98,22 +101,35 @@ public abstract class Kategori {
     }
 
     /**
-     *  Shuffle the answers of the desired questions.
-     *  Shame function as in Question, but simplyfied the process to use it.
+     * Shuffle the answers of the desired questions.
+     * Shame function as in Question, but simplyfied the process to use it.
      *
      * @see Question
      */
 
-public void shuffleQuestionsFromList(int indexOfQuestion){
-        listOfQuestions.get(indexOfQuestion).shuffleQuestions();
-}
+//Todo Göra så om det är slut på valda frågor att det inte fastnar i en loop.
+    public List<Question> generateQuestions(Kategori chosenCategory, int numberOfQuestions) {
+        List<Question> listWithQuestions = new ArrayList<>();
 
-public void shuffleEntireListOfQuestions(){
-    Collections.shuffle(listOfQuestions);
-}
+        for (int i = 0; i < numberOfQuestions; i++) {
+            Question q = listWithQuestions.get(i);
+            if (!q.getUsed()) {
+                q.shuffleQAnswers();
+                listWithQuestions.add(q);
+            }else {
+                i--;
+            }
+        }
+        return listWithQuestions;
+    }
 
+    public void shuffleQuestionsFromList(int indexOfQuestion) {
+        listOfQuestions.get(indexOfQuestion).shuffleQAnswers();
+    }
 
-
+    public void shuffleEntireListOfQuestions() {
+        Collections.shuffle(listOfQuestions);
+    }
 
 
     public Kategori(String categoryName) {
