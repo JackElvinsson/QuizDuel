@@ -15,5 +15,4 @@ public class Kultur extends Kategori{
         List<Question> list = getQuestionsFromFile(filePathforQuestionsFile);
         this.setListOfQuestions(list);
     }
-
 }

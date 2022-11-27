@@ -21,9 +21,6 @@ public class GUI extends JFrame {
     boolean isReady = false;
     //    Client client = new Client();
 //    IOUtils ioUtils = new IOUtils();
-    GameInit gameInit = new GameInit();
-    List<Kategori> categoryList = gameInit.getCategoryList();
-    List<Kategori> categoryOptions = gameInit.getCategoryOptions();
     int rows = 3;
     int columns = 2;
     int categoryTracker = -1;
@@ -150,6 +147,7 @@ public class GUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Välj ett namn och tryck\nenter för att registrera", "Meddelande", JOptionPane.INFORMATION_MESSAGE);
 
                 } else {
+
                     changeScene(startPanel, lobbyPanel);
                 }
 
@@ -158,6 +156,7 @@ public class GUI extends JFrame {
                     setPlayer(player);
 
                     player.connectToServer();
+
                     while (oppName.getText().equals("Spelare2")) {
                         oppName.setText(getPlayer().getOtherPlayerName());
                     }
@@ -173,25 +172,21 @@ public class GUI extends JFrame {
 
                 categoryCounter = 0;
 
-                changeScene(lobbyPanel, categoryPanel);
+                if (player.getPlayerID() == 2) {
+                    changeScene(lobbyPanel, waitingPanel);
 
-                setCategories(player.getCategoryOptions(), firstCategory, secondCategory, thirdCategory, fourthCategory);
+                } else {
+
+                    setCategories(player.getCategoryOptions(), firstCategory, secondCategory, thirdCategory, fourthCategory);
+                    changeScene(lobbyPanel, categoryPanel);
 
 
-//                if (isChoosing) {
-//                lobbyPanel.setVisible(false);
-//                categoryPanel.setVisible(true);
+                    //TODO: Nästa spelare får välja kategori
+                    //TODO: Spelare som ej väljer hamnar i waitingPanel
 
-//                } else {
-//                    lobbyPanel.setVisible(false);
-//                    waitingPanel.setVisible(true);
-//                }
-
-                //TODO: Nästa spelare får välja kategori
-                //TODO: Spelare som ej väljer hamnar i waitingPanel
-
-                //TODO: Uppdatera Fråga och svarsalternativ
-                //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+                    //TODO: Uppdatera Fråga och svarsalternativ
+                    //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+                }
             }
         });
 
@@ -213,11 +208,12 @@ public class GUI extends JFrame {
                 categoryTracker = 0;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
+                selectedCategory = player.getCategoryOptions().get(0);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(0));
+                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
+                player.setSelectedCategory(selectedCategory);
             }
         });
 
@@ -228,11 +224,12 @@ public class GUI extends JFrame {
                 categoryTracker = 1;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
+                selectedCategory = player.getCategoryOptions().get(1);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(1));
+                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
+                player.setSelectedCategory(selectedCategory);
             }
         });
 
@@ -243,11 +240,12 @@ public class GUI extends JFrame {
                 categoryTracker = 2;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
+                selectedCategory = player.getCategoryOptions().get(2);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(2));
+                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
+                player.setSelectedCategory(selectedCategory);
             }
         });
 
@@ -258,11 +256,12 @@ public class GUI extends JFrame {
                 categoryTracker = 3;
                 categoryCounter++;
                 changeScene(categoryPanel, playPanel);
+                selectedCategory = player.getCategoryOptions().get(3);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(3));
+                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
+                player.setSelectedCategory(selectedCategory);
             }
         });
 
@@ -281,7 +280,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, firstAnswer);
                 }
             }
@@ -302,7 +301,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, secondAnswer);
                 }
             }
@@ -323,7 +322,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                            String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, thirdAnswer);
                 }
             }
@@ -344,7 +343,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, fourthAnswer);
                 }
             }
@@ -505,41 +504,43 @@ public class GUI extends JFrame {
     }
 
 
-    public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
+    public void setQuestionAndAnswers(List<Question> listOfQuestions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
 
-        questionTextArea.setText(categoryOptions.get(i).getListOfQuestions().get(0).getQuestionText());
-        firstAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer1().getAnswerText());
-        secondAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer2().getAnswerText());
-        thirdAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer3().getAnswerText());
-        fourthAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer4().getAnswerText());
+        questionTextArea.setText(player.getListOfQuestions().get(0).getQuestionText());
+        firstAnswer.setText(player.getListOfQuestions().get(0).getAnswer1().getAnswerText());
+        secondAnswer.setText(player.getListOfQuestions().get(0).getAnswer2().getAnswerText());
+        thirdAnswer.setText(player.getListOfQuestions().get(0).getAnswer3().getAnswerText());
+        fourthAnswer.setText(player.getListOfQuestions().get(0).getAnswer4().getAnswerText());
     }
+
+    //TODO Lägg till dynamiskt antal frågor
 
     public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
 
-        firstCategory.setText(categoryOptions.get(0).getCategoryName());
-        secondCategory.setText(categoryOptions.get(1).getCategoryName());
-        thirdCategory.setText(categoryOptions.get(2).getCategoryName());
-        fourthCategory.setText(categoryOptions.get(3).getCategoryName());
+        firstCategory.setText(player.getCategoryOptions().get(0).getCategoryName());
+        secondCategory.setText(player.getCategoryOptions().get(1).getCategoryName());
+        thirdCategory.setText(player.getCategoryOptions().get(2).getCategoryName());
+        fourthCategory.setText(player.getCategoryOptions().get(3).getCategoryName());
     }
 
     public String markCorrectAnswer(List<Kategori> categoryOptions, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int categoryTracker) {
 
-        if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getIsAnswerCorrect()) {
+        if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getIsAnswerCorrect()) {
             firstAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getAnswerText());
             return firstAnswer.getText();
-        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getIsAnswerCorrect()) {
+        } else if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getIsAnswerCorrect()) {
             secondAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getAnswerText());
             return secondAnswer.getText();
-        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getIsAnswerCorrect()) {
+        } else if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getIsAnswerCorrect()) {
             thirdAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getAnswerText());
             return thirdAnswer.getText();
-        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getIsAnswerCorrect()) {
+        } else if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getIsAnswerCorrect()) {
             fourthAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getAnswerText());

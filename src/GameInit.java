@@ -28,7 +28,6 @@ public class GameInit implements Serializable {
     }
 
     public GameInit() throws IOException {
-
     }
 
     public List<Kategori> getCategoryList() {
@@ -63,8 +62,8 @@ public class GameInit implements Serializable {
     }
 
     /**
-     * Använd "Kategori selectedCategor" som inparameter när man kallar på metoden.
-     * Kategori selectedCategor sätts utav metoden makeNotChosenCategoryAvailable.
+     * Använd "Kategori selectedCategory" som inparameter när man kallar på metoden.
+     * Kategori selectedCategory sätts utav metoden makeNotChosenCategoryAvailable.
      */
     public List<Question> getQuestions(Kategori chosenCategory, int numberOfQuestions) {
 

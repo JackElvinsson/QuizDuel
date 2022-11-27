@@ -1,4 +1,5 @@
 import Questions.Categories.Kategori;
+import Questions.Question;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -19,6 +20,8 @@ public class GameServer {
     public boolean threadWait = true;
     GameInit gameInit = new GameInit();
     private List<Kategori> categoryOptions = gameInit.getCategoryOptions();
+    List<Question> listOfQuestions;
+
 
 
     public GameServer() throws IOException {
@@ -92,7 +95,6 @@ public class GameServer {
 
         public void run() { //separat run tråd för spelarna.
             try {
-
 
                 dataOut.writeInt(playerID);   //skickar INT med vilket ID man fått. 1 || 2 till client.
                 System.out.println("Skickat playerID:" + playerID);
@@ -188,6 +190,34 @@ public class GameServer {
             }
         }
 
+        public List<Question> retrieveSelectedList(){
+
+            try {
+
+                List<Kategori> selectedList = (List<Kategori>) ois.readObject();
+                Kategori selectedItem = (Kategori) ois.readObject();
+                gameInit.makeNotChosenCategoryAvailable(selectedList, selectedItem);
+
+                listOfQuestions = gameInit.getQuestions(gameInit.selectedCategory, 3);
+
+                //TODO Lägg till hantering av antal frågor ifrån properties
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            return listOfQuestions;
+        }
+
+        public void sendQuestions() {
+            try {
+                oos.writeObject(listOfQuestions);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         public void closeConnection() {
             try {
                 socket.close();
@@ -196,42 +226,6 @@ public class GameServer {
                 System.out.println("IOException on closeConnection");
             }
         }
-
-
-        /////////////////// OBJECT STREAM TEST ///////////////////////////////////////////
-//        public void sendObject(Object outObject) {
-//            try {
-//                System.out.println("Server tries to send " + outObject + " to client " + "player: " + playerID);
-//                oos.writeObject(outObject);
-//                oos.flush();
-//                oos.reset();
-//                System.out.println("Server not sucsessful to send" + outObject + " to client " + "player: " + playerID);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-
-        /////////////////// OBJECT STREAM TEST ///////////////////////////////////////////
-//        public void sendList(List<Kategori> kategoriList) throws IOException {
-//
-//            try (ServerSocket ss = new ServerSocket(44444);
-//                 ObjectOutputStream out = new ObjectOutputStream(ss.;
-//                 ObjectInputStream in = new ObjectInputStream(s.getInputStream())) {
-//
-//                System.out.println("Kommer till innan output");
-//
-//                out.writeObject(kategoriList);
-//
-//                System.out.println(kategoriList.get(0).getCategoryName());
-//                System.out.println(kategoriList.get(1).getCategoryName());
-//                System.out.println(kategoriList.get(2).getCategoryName());
-//                System.out.println(kategoriList.get(3).getCategoryName());
-//
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
     }
 
         public static void main(String[] args) throws IOException {

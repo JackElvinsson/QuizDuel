@@ -1,7 +1,7 @@
 import Questions.Categories.Kategori;
+import Questions.Question;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -11,17 +11,17 @@ public class Player extends JFrame implements Serializable{
     private int otherPlayer;
     private String otherPlayerName;
     private String userName;
+    private List<Kategori> categoryOptions;
 
+    private Kategori selectedCategory;
+
+    List<Question> listOfQuestions;
+
+    public String getPlayerName() {
+        return userName;
+    }
 
     private ClientSideConnection csc;
-
-    public List<Kategori> getCategoryOptions() {
-        return categoryOptions;
-    }
-
-    public void setCategoryOptions(List<Kategori> categoryOptions) {
-        this.categoryOptions = categoryOptions;
-    }
     public Player(String playerName)throws IOException {
         userName=playerName;
         //används för att kalla på inner class.
@@ -32,6 +32,37 @@ public class Player extends JFrame implements Serializable{
 
     }
 
+    public Kategori getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(Kategori selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+
+    public int getPlayerID() {
+        return playerID;
+    }
+
+    public String getOtherPlayerName() {
+        return otherPlayerName;
+    }
+
+    public List<Question> getListOfQuestions() {
+        return listOfQuestions;
+    }
+    public ClientSideConnection getCsc() {
+        return csc;
+    }
+
+    public List<Kategori> getCategoryOptions() {
+        return categoryOptions;
+    }
+
+    public void setCategoryOptions(List<Kategori> categoryOptions) {
+        this.categoryOptions = categoryOptions;
+    }
+
     //Client Connection Inner Class
     private class ClientSideConnection {
         private Socket socket;
@@ -40,10 +71,7 @@ public class Player extends JFrame implements Serializable{
         private BufferedReader inputBuffered;
         private PrintWriter outputPrint;
         ObjectInputStream inputStream;
-
         ObjectOutputStream outputStream;
-
-
 
 
         public ClientSideConnection() {
@@ -78,6 +106,8 @@ public class Player extends JFrame implements Serializable{
                 System.out.println("IO Exception from CSC Constructor");
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 
@@ -87,6 +117,7 @@ public class Player extends JFrame implements Serializable{
          * <p>
          * Inparaametern ska vara det som man har valt i GUI't.
          */
+
 
         public void sendUserName(String chosenName) { //Inparameter är namnet som använder väljer i GUI't.
 
@@ -125,6 +156,28 @@ public class Player extends JFrame implements Serializable{
                 System.out.println("IOException on closeConnection");
             }
         }
+
+        public void sendListBackToServer(List<Kategori> selectedList, Kategori selectedItem ) {
+            System.out.println("---Försöker--- skicka lista & kategori till server");
+            try {
+
+                outputStream.writeObject(selectedList);
+                outputStream.writeObject(selectedItem);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Skickade till lista & kategori servern.");
+        }
+                    //Väntar på att användare väljer kategori.  Skickar sedan info till servern. Nullar selectedCategory efter skickat till server.
+        public void waitingForSelection(){
+
+            while(selectedCategory == null){
+            }
+            sendListBackToServer(categoryOptions, selectedCategory);
+            selectedCategory=null;
+        }
+
     }
 
 //    public static void main(String[] args) throws IOException {
