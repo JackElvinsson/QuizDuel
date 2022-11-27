@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Question implements Serializable {
+public class Question {
 
 
     String questionText;

@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
 
-public class Kultur extends Kategori implements Serializable {
+public class Kultur extends Kategori{
 
-    public Kultur(String categoryName, Path filePathforQuestionsFile) throws IOException {
+    public Kultur(String categoryName, String filePathforQuestionsFile) throws IOException {
         super(categoryName);
         setFileWithQuestions(filePathforQuestionsFile);
         List<Question> list = getQuestionsFromFile(filePathforQuestionsFile);

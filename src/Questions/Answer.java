@@ -2,7 +2,7 @@ package Questions;
 
 import java.io.Serializable;
 
-public class Answer implements Serializable{
+public class Answer implements Serializable {
 
     String answerText;
     Boolean isAnswerCorrect;

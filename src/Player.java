@@ -1,38 +1,36 @@
+import Questions.Categories.Kategori;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 
 
-public class Player extends JFrame {
+public class Player extends JFrame implements Serializable{
     private int playerID;
     private int otherPlayer;
     private String otherPlayerName;
     private String userName;
 
 
-    public String getOtherPlayerName() {
-        return otherPlayerName;
-    }
-
-    public String getPlayerName() {
-        return userName;
-    }
-
     private ClientSideConnection csc;
 
+    public List<Kategori> getCategoryOptions() {
+        return categoryOptions;
+    }
+
+    public void setCategoryOptions(List<Kategori> categoryOptions) {
+        this.categoryOptions = categoryOptions;
+    }
     public Player(String playerName)throws IOException {
         userName=playerName;
         //används för att kalla på inner class.
     }
 
-
-
     public void connectToServer() {
         csc = new ClientSideConnection();
 
     }
-
 
     //Client Connection Inner Class
     private class ClientSideConnection {
@@ -41,6 +39,11 @@ public class Player extends JFrame {
         private DataOutputStream dataOut;
         private BufferedReader inputBuffered;
         private PrintWriter outputPrint;
+        ObjectInputStream inputStream;
+
+        ObjectOutputStream outputStream;
+
+
 
 
         public ClientSideConnection() {
@@ -73,6 +76,8 @@ public class Player extends JFrame {
 
             } catch (IOException e) {
                 System.out.println("IO Exception from CSC Constructor");
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         }
 

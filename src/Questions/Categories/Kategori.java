@@ -18,7 +18,7 @@ public abstract class Kategori implements Serializable {
 
     private String categoryName;
     private List<Question> listOfQuestions;
-    Path fileWithQuestions;
+    String fileWithQuestions;
     Boolean used = false;
 
     public Kategori(){
@@ -31,7 +31,7 @@ public abstract class Kategori implements Serializable {
      *
      * @see Question
      */
-    public List<Question> getQuestionsFromFile(Path questionsFile) throws IOException {
+    public List<Question> getQuestionsFromFile(String questionsFile) throws IOException {
         List<Question> listOfQuestions = new ArrayList<>();
         String questionText = "";
         Answer answer1 = null;
@@ -71,10 +71,6 @@ public abstract class Kategori implements Serializable {
                 }
             }
 
-        } catch (FileNotFoundException e) {
-            System.out.println("No file found.");
-            e.printStackTrace();
-            System.exit(0);
         } catch (Exception e) {
             System.out.println("Something went wrong, please contact the system administrator.");
             e.printStackTrace();
@@ -137,7 +133,7 @@ public abstract class Kategori implements Serializable {
         setCategoryName(categoryName);
     }
 
-    public void setFileWithQuestions(Path fileWithQuestions) {
+    public void setFileWithQuestions(String fileWithQuestions) {
         this.fileWithQuestions = fileWithQuestions;
     }
 

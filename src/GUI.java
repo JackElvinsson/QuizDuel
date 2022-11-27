@@ -20,7 +20,7 @@ public class GUI extends JFrame {
 
     boolean isReady = false;
     //    Client client = new Client();
-    IOUtils ioUtils = new IOUtils();
+//    IOUtils ioUtils = new IOUtils();
     GameInit gameInit = new GameInit();
     List<Kategori> categoryList = gameInit.getCategoryList();
     List<Kategori> categoryOptions = gameInit.getCategoryOptions();
@@ -175,7 +175,7 @@ public class GUI extends JFrame {
 
                 changeScene(lobbyPanel, categoryPanel);
 
-                setCategories(ioUtils.fetchList(), firstCategory, secondCategory, thirdCategory, fourthCategory);
+                setCategories(player.getCategoryOptions(), firstCategory, secondCategory, thirdCategory, fourthCategory);
 
 
 //                if (isChoosing) {

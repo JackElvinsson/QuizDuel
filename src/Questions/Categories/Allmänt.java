@@ -7,10 +7,10 @@ import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
 
-public class Allmänt extends Kategori implements Serializable {
+public class Allmänt extends Kategori {
 
 
-    public Allmänt(String categoryName, Path filePathforQuestionsFile) throws IOException {
+    public Allmänt(String categoryName, String filePathforQuestionsFile) throws IOException {
         super(categoryName);
         setFileWithQuestions(filePathforQuestionsFile);
         List<Question> list = getQuestionsFromFile(filePathforQuestionsFile);

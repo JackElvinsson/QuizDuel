@@ -18,6 +18,7 @@ public class GameServer {
 
     public boolean threadWait = true;
     GameInit gameInit = new GameInit();
+    private List<Kategori> categoryOptions = gameInit.getCategoryOptions();
 
 
     public GameServer() throws IOException {
@@ -77,8 +78,8 @@ public class GameServer {
 
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
-//                oos = new ObjectOutputStream(socket.getOutputStream());
-//                ois = new ObjectInputStream(socket.getInputStream());
+                oos = new ObjectOutputStream(socket.getOutputStream());
+                ois = new ObjectInputStream(socket.getInputStream());
 
 //                buffIn = new BufferedReader(new InputStreamReader(
 //                        socket.getInputStream()));
@@ -91,6 +92,8 @@ public class GameServer {
 
         public void run() { //separat run tråd för spelarna.
             try {
+
+
                 dataOut.writeInt(playerID);   //skickar INT med vilket ID man fått. 1 || 2 till client.
                 System.out.println("Skickat playerID:" + playerID);
 //                countDownLatch.await();
@@ -122,12 +125,24 @@ public class GameServer {
 
                 sendUserName();
 
-                if (playerID == 1) {
 
-                    sendObject(gameInit.getCategoryList());
-                    System.out.println("kommer till send object");
-                    sendList(gameInit.getCategoryList(), socket);
+                if (playerID == 1) {
+//                    player1ButtonNum = dataIn.readInt();
+//                    System.out.println("Player 1 clicked button#" + player1ButtonNum);
+//                    player2.sendButtonNum(player1ButtonNum);
+                    sendListOfCategoryOptions(categoryOptions);
                 }
+//                } else {
+//                    player2ButtonNum = dataIn.readInt();
+//                    System.out.println("Player 2 clicked button#" + player2ButtonNum);
+//                    player1.sendButtonNum(player2ButtonNum);
+//                }
+
+//                if (playerID == 1) {
+//
+////                    sendObject(gameInit.getCategoryList());
+//                    System.out.println("kommer till send object");
+//                    sendList(gameInit.getCategoryList());
 
 
             } catch (IOException e) {
@@ -152,9 +167,7 @@ public class GameServer {
                     System.out.println("Player 2 name is set to: " + player2Name);
                     break;
                 }
-
             }
-
         }
 
 
@@ -186,42 +199,44 @@ public class GameServer {
 
 
         /////////////////// OBJECT STREAM TEST ///////////////////////////////////////////
-        public void sendObject(Object outObject) {
-            try {
-                System.out.println("Server tries to send " + outObject + " to client " + "player: " + playerID);
-                oos.writeObject(outObject);
-                oos.flush();
-                oos.reset();
-                System.out.println("Server not sucsessful to send" + outObject + " to client " + "player: " + playerID);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        public void sendObject(Object outObject) {
+//            try {
+//                System.out.println("Server tries to send " + outObject + " to client " + "player: " + playerID);
+//                oos.writeObject(outObject);
+//                oos.flush();
+//                oos.reset();
+//                System.out.println("Server not sucsessful to send" + outObject + " to client " + "player: " + playerID);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 
         /////////////////// OBJECT STREAM TEST ///////////////////////////////////////////
-        public void sendList(List<Kategori> kategoriList, Socket s) throws IOException {
+//        public void sendList(List<Kategori> kategoriList) throws IOException {
+//
+//            try (ServerSocket ss = new ServerSocket(44444);
+//                 ObjectOutputStream out = new ObjectOutputStream(ss.;
+//                 ObjectInputStream in = new ObjectInputStream(s.getInputStream())) {
+//
+//                System.out.println("Kommer till innan output");
+//
+//                out.writeObject(kategoriList);
+//
+//                System.out.println(kategoriList.get(0).getCategoryName());
+//                System.out.println(kategoriList.get(1).getCategoryName());
+//                System.out.println(kategoriList.get(2).getCategoryName());
+//                System.out.println(kategoriList.get(3).getCategoryName());
+//
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+    }
 
-            try (ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-                 ObjectInputStream in = new ObjectInputStream(s.getInputStream()))  {
-
-                System.out.println("Kommer till innan output");
-
-                out.writeObject(kategoriList);
-
-                System.out.println(kategoriList.get(0).getCategoryName());
-                System.out.println(kategoriList.get(1).getCategoryName());
-                System.out.println(kategoriList.get(2).getCategoryName());
-                System.out.println(kategoriList.get(3).getCategoryName());
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        public static void main(String[] args) throws IOException {
+            GameServer gs = new GameServer();
+            gs.acceptConnections();
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        GameServer gs = new GameServer();
-        gs.acceptConnections();
-    }
-}
