@@ -1,5 +1,7 @@
 //import Questions.Categories.Kategori;
+
 import Questions.Categories.Kategori;
+import Questions.Question;
 import Questions.QuestionInit;
 
 import javax.swing.*;
@@ -10,10 +12,19 @@ import java.util.List;
 
 public class GameInit {
 
+    Kategori selectedCategory;
+
 
     QuestionInit qInit = new QuestionInit();
     List<Kategori> categoryList = qInit.getCategories();
 
+    public Kategori getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(Kategori selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
 
     public GameInit() throws IOException {
 
@@ -41,13 +52,25 @@ public class GameInit {
 
 
     public void makeNotChosenCategoryAvailable(List<Kategori> list, Kategori selectedItem) {
+        setSelectedCategory(selectedItem);
         for (Kategori cat : list) {
-            for (Kategori originalCat : categoryList)
+            for (Kategori originalCat : categoryList) {
                 if (cat.equals(originalCat) && !cat.equals(selectedItem))
                     originalCat.setUsed(false);
+            }
         }
     }
 
+    /**
+     * Använd "Kategori selectedCategor" som inparameter när man kallar på metoden.
+     * Kategori selectedCategor sätts utav metoden makeNotChosenCategoryAvailable.
+     */
+    public List<Question> getQuestions(Kategori chosenCategory, int numberOfQuestions) {
+
+        List<Question> listWithQuestions = chosenCategory.generateQuestions(selectedCategory, numberOfQuestions);
+
+        return listWithQuestions;
+    }
 
     public void skrivnågot() {
         System.out.println("Ser båda klienter?");
