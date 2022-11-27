@@ -27,7 +27,7 @@
           <minimumSize width="500" height="400"/>
           <preferredSize width="500" height="400"/>
           <verifyInputWhenFocusTarget value="true"/>
-          <visible value="false"/>
+          <visible value="true"/>
         </properties>
         <border type="bevel-raised">
           <title-color color="-16777216"/>
@@ -44,6 +44,7 @@
             <properties>
               <background color="-16750900"/>
               <borderPainted value="true"/>
+              <enabled value="false"/>
               <focusPainted value="false"/>
               <font name="Comic Sans MS" size="23" style="1"/>
               <foreground color="-131585"/>
