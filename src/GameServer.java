@@ -68,14 +68,17 @@ public class GameServer {
         private int playerID;
 
         public ServerSideConnection(Socket s, int id) { //Constructor.
+
             socket = s;
             playerID = id;
-            try {
+
+            try (ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+                 ObjectInputStream ois = new ObjectInputStream(s.getInputStream())) {
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
-                buffIn = new BufferedReader(new InputStreamReader(
-                        socket.getInputStream()));
-                buffOut = new PrintWriter(socket.getOutputStream(), true);
+//                buffIn = new BufferedReader(new InputStreamReader(
+//                        socket.getInputStream()));
+//                buffOut = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 System.out.println("IO Exception from SSC Constructor");
             }
@@ -119,6 +122,7 @@ public class GameServer {
 
             } catch (IOException e) {
                 System.out.println("IOException from run() SSC");
+                e.printStackTrace();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -172,10 +176,10 @@ public class GameServer {
 
         public void sendList(List<Kategori> kategoriList) throws IOException {
 
-            ss = new ServerSocket(44444);
-            Socket s = ss.accept();
-            try(ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-                ObjectInputStream ois = new ObjectInputStream(s.getInputStream())) {
+            ServerSocket ss1 = new ServerSocket(44444);
+            Socket s1 = ss1.accept();
+            try(ObjectOutputStream oos = new ObjectOutputStream(s1.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(s1.getInputStream())) {
 
                 oos.writeObject(kategoriList);
                 System.out.println(kategoriList.get(0).getCategoryName());
