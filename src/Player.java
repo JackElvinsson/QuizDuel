@@ -176,6 +176,7 @@ public class Player extends JFrame implements Serializable {
                  wait for turn(results)
                  Wait for turn(kategori)
 
+
                  */
 
 
@@ -190,6 +191,7 @@ public class Player extends JFrame implements Serializable {
          * Metod för att skicka till servern vad man har för användarnamn.
          * <p>
          * Inparaametern ska vara det som man har valt i GUI't.
+         *
          */
 
 
