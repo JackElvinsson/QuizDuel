@@ -236,7 +236,7 @@ public class Player extends JFrame implements Serializable {
                 System.out.println("waitingForData()-- Whileloop startar");
                 try {
                     System.out.println("Innanför try-catch");
-                    s = (String) inputStream.readObject();
+                    s = String.valueOf(inputStream.readObject());
 
                     System.out.println("1 " + s);
                 } catch (IOException e) {
