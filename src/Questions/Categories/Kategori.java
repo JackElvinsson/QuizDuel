@@ -4,9 +4,11 @@ import Questions.Answer;
 import Questions.Question;
 
 import javax.security.sasl.SaslServer;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,13 +41,15 @@ public abstract class Kategori implements Serializable {
         Answer answer3 = null;
         Answer answer4 = null;
 
-        try (Scanner readTextFile = new Scanner(questionsFile)) {
+        try {
 
-            while (readTextFile.hasNext()) {
+            Scanner readTextFile = new Scanner(new File(questionsFile));
+
+            while (readTextFile.hasNextLine()) {
                 for (int lineCounter = 0; lineCounter <= 4; lineCounter++) { //todo; loopa om 0-4.
                     if (readTextFile.hasNextLine()) {
                         String tempLine = readTextFile.nextLine();
-
+                        System.out.println("från tempLine" + tempLine);
 
                         switch (lineCounter) {
                             case 0:
@@ -107,12 +111,14 @@ public abstract class Kategori implements Serializable {
 //Todo Göra så om det är slut på valda frågor att det inte fastnar i en loop.
     public List<Question> generateQuestions(Kategori chosenCategory, int numberOfQuestions) {
         List<Question> listWithQuestions = new ArrayList<>();
-
+        System.out.println(chosenCategory.getListOfQuestions().get(0));
         for (int i = 0; i < numberOfQuestions; i++) {
-            Question q = listWithQuestions.get(i);
+            Question q = chosenCategory.getListOfQuestions().get(i);
+            System.out.println(chosenCategory.getListOfQuestions().get(i));
             if (!q.getUsed()) {
                 q.shuffleQAnswers();
                 listWithQuestions.add(q);
+
             }else {
                 i--;
             }

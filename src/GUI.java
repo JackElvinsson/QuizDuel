@@ -1,4 +1,3 @@
-
 import Questions.Categories.Kategori;
 import Questions.Question;
 
@@ -15,13 +14,12 @@ import java.util.Random;
 
 public class GUI extends JFrame {
 
-
 //    MethodsGUI methodsGUI = new MethodsGUI();
 
     boolean isReady = false;
     //    Client client = new Client();
 //    IOUtils ioUtils = new IOUtils();
-    int rows = 3;
+    int rows = 1;
     int columns = 2;
     int categoryTracker = -1;
     protected int questionsPerRound = columns;
@@ -34,6 +32,7 @@ public class GUI extends JFrame {
     int[][] answerArray;
     protected User user = new User();
     private Random randomGenerator;
+//    public Kategori selectedItem;
 
     public Player getPlayer() {
         return player;
@@ -80,7 +79,6 @@ public class GUI extends JFrame {
     private JLabel opponentCurrentScore;
     private JButton fourthCategory;
 
-
     Border border = new BevelBorder(BevelBorder.RAISED);
 
     GUI() throws IOException {
@@ -117,7 +115,6 @@ public class GUI extends JFrame {
         setVisible(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
 
         // Action listeners
 
@@ -176,14 +173,13 @@ public class GUI extends JFrame {
                 categoryCounter = 0;
 
                 if (player.getPlayerID() == 2) {
+                    System.out.println("Innanför player2 scenbyte");
                     changeScene(lobbyPanel, waitingPanel);
 
                 } else {
 
                     setCategories(player.getCategoryOptions(), firstCategory, secondCategory, thirdCategory, fourthCategory);
                     changeScene(lobbyPanel, categoryPanel);
-
-
 
                     //TODO: Nästa spelare får välja kategori
                     //TODO: Spelare som ej väljer hamnar i waitingPanel
@@ -211,14 +207,19 @@ public class GUI extends JFrame {
 
                 categoryTracker = 0;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+//                while(player.getCsc().getListOfQuestions().get(0).getQuestionText().isBlank()) {
+//                }
+                while(player.getCsc().getIdle()) {
+                }
+
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
                 changeScene(categoryPanel, playPanel);
-                selectedItem = player.getCategoryOptions().get(categoryTracker);
-                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -228,14 +229,17 @@ public class GUI extends JFrame {
 
                 categoryTracker = 1;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+                while(player.getCsc().getListOfQuestions().isEmpty()) {
+                }
+
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
                 changeScene(categoryPanel, playPanel);
-                selectedItem = player.getCategoryOptions().get(categoryTracker);
-                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -245,14 +249,17 @@ public class GUI extends JFrame {
 
                 categoryTracker = 2;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+                while(player.getCsc().getListOfQuestions().isEmpty()) {
+                }
+
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
                 changeScene(categoryPanel, playPanel);
-                selectedItem = player.getCategoryOptions().get(categoryTracker);
-                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -262,14 +269,17 @@ public class GUI extends JFrame {
 
                 categoryTracker = 3;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+                while(player.getCsc().getListOfQuestions().isEmpty()) {
+                }
+
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
                 changeScene(categoryPanel, playPanel);
-                selectedItem = player.getCategoryOptions().get(categoryTracker);
-                System.out.println("Knapp skriver ut: "+player.getCategoryOptions().get(categoryTracker));
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-//                setQuestionAndAnswers(player.getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
             }
         });
 
@@ -514,41 +524,43 @@ public class GUI extends JFrame {
 
     public void setQuestionAndAnswers(List<Question> listOfQuestions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
 
-        questionTextArea.setText(player.getListOfQuestions().get(0).getQuestionText());
-        firstAnswer.setText(player.getListOfQuestions().get(0).getAnswer1().getAnswerText());
-        secondAnswer.setText(player.getListOfQuestions().get(1).getAnswer2().getAnswerText());
-        thirdAnswer.setText(player.getListOfQuestions().get(2).getAnswer3().getAnswerText());
-        fourthAnswer.setText(player.getListOfQuestions().get(3).getAnswer4().getAnswerText());
+        while(listOfQuestions.isEmpty()) {
+            questionTextArea.setText(listOfQuestions.get(0).getQuestionText());
+            firstAnswer.setText(listOfQuestions.get(0).getAnswer1().getAnswerText());
+            secondAnswer.setText(listOfQuestions.get(0).getAnswer2().getAnswerText());
+            thirdAnswer.setText(listOfQuestions.get(0).getAnswer3().getAnswerText());
+            fourthAnswer.setText(listOfQuestions.get(0).getAnswer4().getAnswerText());
+        }
     }
 
     //TODO Lägg till dynamiskt antal frågor
 
     public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
 
-        firstCategory.setText(player.getCategoryOptions().get(0).getCategoryName());
-        secondCategory.setText(player.getCategoryOptions().get(1).getCategoryName());
-        thirdCategory.setText(player.getCategoryOptions().get(2).getCategoryName());
-        fourthCategory.setText(player.getCategoryOptions().get(3).getCategoryName());
+        firstCategory.setText(categoryOptions.get(0).getCategoryName());
+        secondCategory.setText(categoryOptions.get(1).getCategoryName());
+        thirdCategory.setText(categoryOptions.get(2).getCategoryName());
+        fourthCategory.setText(categoryOptions.get(3).getCategoryName());
     }
 
     public String markCorrectAnswer(List<Kategori> categoryOptions, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int categoryTracker) {
 
-        if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getIsAnswerCorrect()) {
+        if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getIsAnswerCorrect()) {
             firstAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer1().getAnswerText());
             return firstAnswer.getText();
-        } else if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getIsAnswerCorrect()) {
+        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getIsAnswerCorrect()) {
             secondAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer2().getAnswerText());
             return secondAnswer.getText();
-        } else if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getIsAnswerCorrect()) {
+        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getIsAnswerCorrect()) {
             thirdAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer3().getAnswerText());
             return thirdAnswer.getText();
-        } else if (player.getCategoryOptions().get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getIsAnswerCorrect()) {
+        } else if (categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getIsAnswerCorrect()) {
             fourthAnswer.setBackground(Color.GREEN);
 
             System.out.println(categoryOptions.get(categoryTracker).getListOfQuestions().get(0).getAnswer4().getAnswerText());

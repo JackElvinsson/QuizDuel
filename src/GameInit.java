@@ -19,6 +19,7 @@ public class GameInit implements Serializable {
     QuestionInit qInit = new QuestionInit();
     List<Kategori> categoryList = qInit.getCategories();
 
+
     public Kategori getSelectedCategory() {
         return selectedCategory;
     }
@@ -65,11 +66,9 @@ public class GameInit implements Serializable {
      * Använd "Kategori selectedCategory" som inparameter när man kallar på metoden.
      * Kategori selectedCategory sätts utav metoden makeNotChosenCategoryAvailable.
      */
-    public List<Question> getQuestions(Kategori chosenCategory, int numberOfQuestions) {
+    public List<Question> getQuestions(Kategori chosenCategory, int numberOfQuestions) throws IOException {
 
-        List<Question> listWithQuestions = chosenCategory.generateQuestions(selectedCategory, numberOfQuestions);
-
-        return listWithQuestions;
+        return chosenCategory.generateQuestions(selectedCategory, numberOfQuestions);
     }
 
     public void skrivnågot() {
