@@ -1,4 +1,3 @@
-
 import Questions.Categories.Kategori;
 import Questions.Question;
 
@@ -15,15 +14,12 @@ import java.util.Random;
 
 public class GUI extends JFrame {
 
-
 //    MethodsGUI methodsGUI = new MethodsGUI();
 
     boolean isReady = false;
     //    Client client = new Client();
-    GameInit gameInit = new GameInit();
-    List<Kategori> categoryList = gameInit.getCategoryList();
-    List<Kategori> categoryOptions = gameInit.getCategoryOptions();
-    int rows = 3;
+//    IOUtils ioUtils = new IOUtils();
+    int rows = 1;
     int columns = 2;
     int categoryTracker = -1;
     protected int questionsPerRound = columns;
@@ -36,6 +32,7 @@ public class GUI extends JFrame {
     int[][] answerArray;
     protected User user = new User();
     private Random randomGenerator;
+//    public Kategori selectedItem;
 
     public Player getPlayer() {
         return player;
@@ -82,7 +79,6 @@ public class GUI extends JFrame {
     private JLabel opponentCurrentScore;
     private JButton fourthCategory;
 
-
     Border border = new BevelBorder(BevelBorder.RAISED);
 
     GUI() throws IOException {
@@ -120,7 +116,6 @@ public class GUI extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
         // Action listeners
 
         avslutaButton.addActionListener(new ActionListener() {
@@ -157,6 +152,7 @@ public class GUI extends JFrame {
                     setPlayer(player);
 
                     player.connectToServer();
+
                     while (oppName.getText().equals("Spelare2")) {
                         oppName.setText(getPlayer().getOtherPlayerName());
                     }
@@ -166,31 +162,31 @@ public class GUI extends JFrame {
             }
         });
 
+        /**
+         * Vad som händer när man trycker på SPELA knappen.
+         * */
+
         spela.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 categoryCounter = 0;
 
-                changeScene(lobbyPanel, categoryPanel);
+                if (player.getPlayerID() == 2) {
+                    System.out.println("Innanför player2 scenbyte");
+                    changeScene(lobbyPanel, waitingPanel);
 
-                setCategories(categoryOptions, firstCategory, secondCategory, thirdCategory, fourthCategory);
+                } else {
 
+                    setCategories(player.getCategoryOptions(), firstCategory, secondCategory, thirdCategory, fourthCategory);
+                    changeScene(lobbyPanel, categoryPanel);
 
-//                if (isChoosing) {
-//                lobbyPanel.setVisible(false);
-//                categoryPanel.setVisible(true);
+                    //TODO: Nästa spelare får välja kategori
+                    //TODO: Spelare som ej väljer hamnar i waitingPanel
 
-//                } else {
-//                    lobbyPanel.setVisible(false);
-//                    waitingPanel.setVisible(true);
-//                }
-
-                //TODO: Nästa spelare får välja kategori
-                //TODO: Spelare som ej väljer hamnar i waitingPanel
-
-                //TODO: Uppdatera Fråga och svarsalternativ
-                //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+                    //TODO: Uppdatera Fråga och svarsalternativ
+                    //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
+                }
             }
         });
 
@@ -211,12 +207,20 @@ public class GUI extends JFrame {
 
                 categoryTracker = 0;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+//                while(player.getCsc().getListOfQuestions().get(0).getQuestionText().isBlank()) {
+//                }
+                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
+
+                }
+                System.out.println("efter while loopen i kategori");
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(0));
             }
         });
 
@@ -229,9 +233,6 @@ public class GUI extends JFrame {
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(1));
             }
         });
 
@@ -244,9 +245,6 @@ public class GUI extends JFrame {
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(2));
             }
         });
 
@@ -259,9 +257,6 @@ public class GUI extends JFrame {
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
-
-                setQuestionAndAnswers(categoryOptions, playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                gameInit.makeNotChosenCategoryAvailable(categoryOptions, categoryOptions.get(3));
             }
         });
 
@@ -280,7 +275,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, firstAnswer);
                 }
             }
@@ -301,7 +296,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, secondAnswer);
                 }
             }
@@ -322,7 +317,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                            String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, thirdAnswer);
                 }
             }
@@ -343,7 +338,7 @@ public class GUI extends JFrame {
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
 //                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                    String correctAnswer = markCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
                     markUserAnswer(correctAnswer, fourthAnswer);
                 }
             }
@@ -504,29 +499,20 @@ public class GUI extends JFrame {
     }
 
 
-    public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
+    public void setQuestionAndAnswers(List<Question> listOfQuestions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
 
-        questionTextArea.setText(categoryOptions.get(i).getListOfQuestions().get(0).getQuestionText());
-        firstAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer1().getAnswerText());
-        secondAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer2().getAnswerText());
-        thirdAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer3().getAnswerText());
-        fourthAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer4().getAnswerText());
+        while(listOfQuestions.isEmpty()) {
+            questionTextArea.setText(listOfQuestions.get(0).getQuestionText());
+            firstAnswer.setText(listOfQuestions.get(0).getAnswer1().getAnswerText());
+            secondAnswer.setText(listOfQuestions.get(0).getAnswer2().getAnswerText());
+            thirdAnswer.setText(listOfQuestions.get(0).getAnswer3().getAnswerText());
+            fourthAnswer.setText(listOfQuestions.get(0).getAnswer4().getAnswerText());
+        }
     }
 
+    //TODO Lägg till dynamiskt antal frågor
+
     public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
-
-        //Generate 4 nonrecurring numbers
-
-//        int[] intArray = new int[4];
-//        int counter = 0;
-//
-//        for (int i = 0; i < 4; i++) {
-//            int j = generateRandomCategoryIndex(categoryOptions);
-//            if (j != intArray[0] || j != intArray[1] || j != intArray[2] || j != intArray[3] ) {
-//                intArray[counter] = j;
-//                counter++;
-//            }
-//        }
 
         firstCategory.setText(categoryOptions.get(0).getCategoryName());
         secondCategory.setText(categoryOptions.get(1).getCategoryName());

@@ -1,3 +1,6 @@
+import Questions.Categories.Kategori;
+import Questions.Question;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,11 +11,20 @@ public class GameServer {
     private int numPlayers;
     private ServerSideConnection player1;
     private ServerSideConnection player2;
-    CountDownLatch countDownLatch = new CountDownLatch(1);
     public String player1Name = "";
     public String player2Name = "";
 
-    public boolean threadWait = true;
+    public boolean player1Wait = true;
+    public boolean player2Wait = true;
+
+
+    public void setPlayer1Wait(boolean wait) {
+        this.player1Wait = wait;
+    }
+
+    public boolean getPlayer1Wait() {
+        return player1Wait;
+    }
 
     public GameServer() {
         System.out.println("----Game Server is running----");
@@ -24,6 +36,7 @@ public class GameServer {
             System.out.println("IOEXCEPTION FROM CONSTRUCTOR!");
         }
     }
+
 
     public void acceptConnections() {
         try {
@@ -52,9 +65,10 @@ public class GameServer {
 
     private class ServerSideConnection implements Runnable {
 
+        CountDownLatch countDownLatch = new CountDownLatch(1);
         private Socket socket;
-        private DataInputStream dataIn;
         private DataOutputStream dataOut;
+        private DataInputStream dataIn;
         private BufferedReader buffIn;
         private PrintWriter buffOut;
 
@@ -62,9 +76,12 @@ public class GameServer {
         private int playerID;
 
         public ServerSideConnection(Socket s, int id) { //Constructor.
+
             socket = s;
             playerID = id;
+
             try {
+
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
                 buffIn = new BufferedReader(new InputStreamReader(
@@ -77,6 +94,7 @@ public class GameServer {
 
         public void run() { //separat run tråd för spelarna.
             try {
+
                 dataOut.writeInt(playerID);   //skickar INT med vilket ID man fått. 1 || 2 till client.
                 System.out.println("Skickat playerID:" + playerID);
 //                countDownLatch.await();
@@ -96,22 +114,21 @@ public class GameServer {
                 }
 
                 synchronized (this) {
-                    while(player2Name.isBlank()) {
+                    while (player2Name.isBlank()) {
                         wait(1500);
-                        System.out.println("playerID "+playerID+" waited 1,5sec");
+                        System.out.println("playerID " + playerID + " waited 1,5sec");
                     }
-                    System.out.println("Player "+playerID+" continues");
+                    System.out.println("Player " + playerID + " continues");
                 }
 
 
-                System.out.println("ID:" + playerID + " is Sending user name to opponent");
-
-
+                System.out.println("ID:" + playerID + " is Sending username to opponent");
                 sendUserName();
 
 
             } catch (IOException e) {
                 System.out.println("IOException from run() SSC");
+                e.printStackTrace();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -131,9 +148,22 @@ public class GameServer {
                     System.out.println("Player 2 name is set to: " + player2Name);
                     break;
                 }
-
             }
+        }
 
+        public void sendListOfCategoryOptions(List<Kategori> optionsList) {
+            try {
+                oos.writeObject(optionsList);
+                System.out.println("sendListOfCategoryOptions: " + optionsList.get(0).getCategoryName());
+                System.out.println("sendListOfCategoryOptions: " + optionsList.get(1).getCategoryName());
+                System.out.println("sendListOfCategoryOptions: " + optionsList.get(2).getCategoryName());
+                System.out.println("sendListOfCategoryOptions: " + optionsList.get(3).getCategoryName());
+
+                oos.flush();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                System.out.println("IOException from sendListOfCategoryOptions");
+            }
         }
 
 
@@ -164,8 +194,9 @@ public class GameServer {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         GameServer gs = new GameServer();
         gs.acceptConnections();
     }
 }
+
