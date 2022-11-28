@@ -4,6 +4,8 @@ import Questions.Question;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLOutput;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class GameServer {
@@ -26,7 +28,21 @@ public class GameServer {
         return player1Wait;
     }
 
-    public GameServer() {
+    public void setPlayer2Wait(boolean wait) {
+        this.player2Wait = wait;
+    }
+
+    public boolean getPlayer2Wait() {
+        return player2Wait;
+    }
+
+    GameInit gameInit = new GameInit();
+    private List<Question> listOfQuestions;
+    private List<Kategori> categoryOptions = gameInit.getCategoryOptions();
+    private List<Question> listOfQuestions;
+
+
+    public GameServer() throws IOException {
         System.out.println("----Game Server is running----");
 
 
@@ -71,7 +87,8 @@ public class GameServer {
         private DataInputStream dataIn;
         private BufferedReader buffIn;
         private PrintWriter buffOut;
-
+        ObjectOutputStream oos;
+        ObjectInputStream ois;
 
         private int playerID;
 
@@ -84,9 +101,14 @@ public class GameServer {
 
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
-                buffIn = new BufferedReader(new InputStreamReader(
-                        socket.getInputStream()));
-                buffOut = new PrintWriter(socket.getOutputStream(), true);
+                oos = new ObjectOutputStream(socket.getOutputStream());
+                ois = new ObjectInputStream(socket.getInputStream());
+
+//                buffIn = new BufferedReader(new InputStreamReader(
+//                        socket.getInputStream()));
+//                buffOut = new PrintWriter(socket.getOutputStream(), true);
+
+                oos.flush();
             } catch (IOException e) {
                 System.out.println("IO Exception from SSC Constructor");
             }
@@ -125,6 +147,27 @@ public class GameServer {
                 System.out.println("ID:" + playerID + " is Sending username to opponent");
                 sendUserName();
 
+
+                if (playerID == 1) {
+//                    player1ButtonNum = dataIn.readInt();
+//                    System.out.println("Player 1 clicked button#" + player1ButtonNum);
+//                    player2.sendButtonNum(player1ButtonNum);
+                    sendListOfCategoryOptions(categoryOptions);
+
+                    System.out.println("Försöker köra waitingForData()");
+                    waitingForData();
+                    System.out.println("waitingForData(); är klar");
+                    System.out.println("Försöker köra stopOpponentIdle");
+                    stopOpponentIdle();
+                    System.out.println("Klar med stopOpponentIdle()");
+
+                } else { //Player 2 väntar.
+                    idleMe();
+                }
+
+
+                sendQuestions();
+                System.out.println("Klar med sendQuestions()");
 
             } catch (IOException e) {
                 System.out.println("IOException from run() SSC");
@@ -184,15 +227,87 @@ public class GameServer {
             }
         }
 
-        public void closeConnection() {
+        public void syncQuestionList(List<Kategori> selectedList, Kategori selectedItem) {
+
+//                List<Kategori> selectedList = (List<Kategori>) ois.readObject();
+//                Kategori selectedItem = (Kategori) ois.readObject();
+            gameInit.makeNotChosenCategoryAvailable(selectedList, selectedItem);
+            System.out.println("Efter makeNotChosenCategoryAvailable");
+            System.out.println("Selecteditem qText " + selectedItem.getListOfQuestions().get(0).getQuestionText());
+            System.out.println("gameInit qText " + gameInit.getSelectedCategory().getListOfQuestions().get(0).getQuestionText());
             try {
-                socket.close();
-                System.out.println("Connection closed");
-            } catch (IOException ex) {
-                System.out.println("IOException on closeConnection");
+                listOfQuestions = gameInit.getQuestions(gameInit.selectedCategory, 1);
+                System.out.println("ListofQuestions = gameInit.getQuestions(gameInit.selectedCategory. Fråga 1 i frågelistan: " + listOfQuestions.get(0).getQuestionText());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            //TODO Lägg till hantering av antal frågor ifrån properties
+        }
+
+
+        public void sendQuestions() {
+            System.out.println("Trying to send questions");
+            String senderString = "Questions";
+            try {
+                oos.writeObject(senderString);
+                oos.writeObject(listOfQuestions);
+
+                System.out.println("skickade sträng:" + senderString);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Questions sent, after outpustream. First question, index 0: " + listOfQuestions.get(0).getQuestionText());
+        }
+
+    public void waitingForData() {
+    String s;
+        while (true) {
+
+            try {
+                s = (String) ois.readObject();
+                System.out.println("String s = "+s);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            if (s.equals("sendListBackToServer")) {
+                try {
+                    System.out.println("Försöker ta emot lista och objekt");
+                    List<Kategori> selectedList = (List<Kategori>) ois.readObject();
+                    System.out.println("fått tillbaka listan med kategorier.");
+
+                        Kategori selectedItem = (Kategori) ois.readObject();
+                        System.out.println("Tagit emot 'selectedItem' försöker sätta ChosenCategory");
+                        System.out.println("selectedItem är: " + selectedItem.getCategoryName());
+
+                    gameInit.setSelectedCategory(selectedItem);
+                    System.out.println("ChosenCategory satt");
+                    syncQuestionList(selectedList, selectedItem);
+                    System.out.println("Har tagit emot lista och objekt");
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
+
+    public void closeConnection() {
+        try {
+            socket.close();
+            System.out.println("Connection closed");
+        } catch (IOException ex) {
+            System.out.println("IOException on closeConnection");
+        }
+    }
+
+}
 
     public static void main(String[] args) throws IOException {
         GameServer gs = new GameServer();

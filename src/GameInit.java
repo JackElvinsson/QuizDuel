@@ -6,17 +6,19 @@ import Questions.QuestionInit;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GameInit {
+public class GameInit implements Serializable {
 
     Kategori selectedCategory;
 
 
     QuestionInit qInit = new QuestionInit();
     List<Kategori> categoryList = qInit.getCategories();
+
 
     public Kategori getSelectedCategory() {
         return selectedCategory;
@@ -27,7 +29,6 @@ public class GameInit {
     }
 
     public GameInit() throws IOException {
-
     }
 
     public List<Kategori> getCategoryList() {
@@ -62,39 +63,16 @@ public class GameInit {
     }
 
     /**
-     * Använd "Kategori selectedCategor" som inparameter när man kallar på metoden.
-     * Kategori selectedCategor sätts utav metoden makeNotChosenCategoryAvailable.
+     * Använd "Kategori selectedCategory" som inparameter när man kallar på metoden.
+     * Kategori selectedCategory sätts utav metoden makeNotChosenCategoryAvailable.
      */
-    public List<Question> getQuestions(Kategori chosenCategory, int numberOfQuestions) {
+    public List<Question> getQuestions(Kategori chosenCategory, int numberOfQuestions) throws IOException {
 
-        List<Question> listWithQuestions = chosenCategory.generateQuestions(selectedCategory, numberOfQuestions);
-
-        return listWithQuestions;
+        return chosenCategory.generateQuestions(selectedCategory, numberOfQuestions);
     }
 
     public void skrivnågot() {
         System.out.println("Ser båda klienter?");
     }
-
-
-    public void setQuestionAndAnswers(List<Kategori> categoryOptions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
-
-        questionTextArea.setText(categoryOptions.get(i).getListOfQuestions().get(0).getQuestionText());
-        firstAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer1().getAnswerText());
-        secondAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer2().getAnswerText());
-        thirdAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer3().getAnswerText());
-        fourthAnswer.setText(categoryOptions.get(i).getListOfQuestions().get(0).getAnswer4().getAnswerText());
-    }
-
-    public void setCategories(List<Kategori> categoryOptions, JButton firstCategory, JButton secondCategory, JButton thirdCategory, JButton fourthCategory) {
-
-
-        firstCategory.setText(categoryOptions.get(0).getCategoryName());
-        secondCategory.setText(categoryOptions.get(1).getCategoryName());
-        thirdCategory.setText(categoryOptions.get(2).getCategoryName());
-        fourthCategory.setText(categoryOptions.get(3).getCategoryName());
-    }
-
-
 }
 

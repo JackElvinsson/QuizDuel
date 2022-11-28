@@ -120,7 +120,7 @@
                     <properties>
                       <font name="Comic Sans MS" size="23" style="1"/>
                       <foreground color="-65530"/>
-                      <text value="Server.Quiz Duellen!"/>
+                      <text value="Quiz Duellen!"/>
                     </properties>
                   </component>
                   <component id="49af1" class="javax.swing.JLabel">

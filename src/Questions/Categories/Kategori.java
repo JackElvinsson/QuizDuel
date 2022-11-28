@@ -3,20 +3,24 @@ package Questions.Categories;
 import Questions.Answer;
 import Questions.Question;
 
+import javax.security.sasl.SaslServer;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public abstract class Kategori {
+public abstract class Kategori implements Serializable {
 
 
     private String categoryName;
     private List<Question> listOfQuestions;
-    Path fileWithQuestions;
+    String fileWithQuestions;
     Boolean used = false;
 
     public Kategori(){
@@ -29,7 +33,7 @@ public abstract class Kategori {
      *
      * @see Question
      */
-    public List<Question> getQuestionsFromFile(Path questionsFile) throws IOException {
+    public List<Question> getQuestionsFromFile(String questionsFile) throws IOException {
         List<Question> listOfQuestions = new ArrayList<>();
         String questionText = "";
         Answer answer1 = null;
@@ -37,13 +41,15 @@ public abstract class Kategori {
         Answer answer3 = null;
         Answer answer4 = null;
 
-        try (Scanner readTextFile = new Scanner(questionsFile)) {
+        try {
 
-            while (readTextFile.hasNext()) {
+            Scanner readTextFile = new Scanner(new File(questionsFile));
+
+            while (readTextFile.hasNextLine()) {
                 for (int lineCounter = 0; lineCounter <= 4; lineCounter++) { //todo; loopa om 0-4.
                     if (readTextFile.hasNextLine()) {
                         String tempLine = readTextFile.nextLine();
-
+                        System.out.println("från tempLine" + tempLine);
 
                         switch (lineCounter) {
                             case 0:
@@ -69,10 +75,6 @@ public abstract class Kategori {
                 }
             }
 
-        } catch (FileNotFoundException e) {
-            System.out.println("No file found.");
-            e.printStackTrace();
-            System.exit(0);
         } catch (Exception e) {
             System.out.println("Something went wrong, please contact the system administrator.");
             e.printStackTrace();
@@ -109,12 +111,14 @@ public abstract class Kategori {
 //Todo Göra så om det är slut på valda frågor att det inte fastnar i en loop.
     public List<Question> generateQuestions(Kategori chosenCategory, int numberOfQuestions) {
         List<Question> listWithQuestions = new ArrayList<>();
-
+        System.out.println(chosenCategory.getListOfQuestions().get(0));
         for (int i = 0; i < numberOfQuestions; i++) {
-            Question q = listWithQuestions.get(i);
+            Question q = chosenCategory.getListOfQuestions().get(i);
+            System.out.println(chosenCategory.getListOfQuestions().get(i));
             if (!q.getUsed()) {
                 q.shuffleQAnswers();
                 listWithQuestions.add(q);
+
             }else {
                 i--;
             }
@@ -135,7 +139,7 @@ public abstract class Kategori {
         setCategoryName(categoryName);
     }
 
-    public void setFileWithQuestions(Path fileWithQuestions) {
+    public void setFileWithQuestions(String fileWithQuestions) {
         this.fileWithQuestions = fileWithQuestions;
     }
 

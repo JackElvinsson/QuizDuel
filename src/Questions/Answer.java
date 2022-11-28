@@ -1,6 +1,8 @@
 package Questions;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable {
 
     String answerText;
     Boolean isAnswerCorrect;

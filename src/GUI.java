@@ -230,6 +230,14 @@ public class GUI extends JFrame {
 
                 categoryTracker = 1;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+                while(player.getCsc().getListOfQuestions().isEmpty()) {
+                }
+
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
@@ -242,6 +250,14 @@ public class GUI extends JFrame {
 
                 categoryTracker = 2;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+                while(player.getCsc().getListOfQuestions().isEmpty()) {
+                }
+
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
@@ -254,6 +270,14 @@ public class GUI extends JFrame {
 
                 categoryTracker = 3;
                 categoryCounter++;
+
+                player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
+                player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
+
+                while(player.getCsc().getListOfQuestions().isEmpty()) {
+                }
+
+                setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
                 changeScene(categoryPanel, playPanel);
 
                 //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
