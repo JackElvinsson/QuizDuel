@@ -8,6 +8,7 @@ import java.sql.SQLOutput;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+//kommentar
 public class GameServer {
     private ServerSocket ss;
     private int numPlayers;

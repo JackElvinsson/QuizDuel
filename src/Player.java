@@ -162,6 +162,7 @@ public class Player extends JFrame implements Serializable {
 
 
                 /**
+                 *
                  if id = 2 wait for turn
                  1 = lyssna efter objekt (listan)
                  1. Tar emot objekt, svarar med lista + objekt.
