@@ -161,9 +161,10 @@ public class GameServer {
                     sendListOfCategoryOptions(categoryOptions);
 
                     System.out.println("Försöker köra waitingForData()");
-                    waitingForData();
+                    waitingForDataServer();
                     System.out.println("waitingForData(); är klar");
                     System.out.println("Försöker köra stopOpponentIdle");
+
                     stopOpponentIdle();
                     System.out.println("Klar med stopOpponentIdle()");
 
@@ -288,7 +289,7 @@ public class GameServer {
             System.out.println("Questions sent, after outpustream. First question, index 0: " + listOfQuestions.get(0).getQuestionText());
         }
 
-        public void waitingForData() {
+        public void waitingForDataServer() {
             System.out.println(playerID + " is waiting for data");
             String s = "";
 

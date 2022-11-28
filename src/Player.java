@@ -213,10 +213,7 @@ public class Player extends JFrame implements Serializable {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
             }
-
-
         }
 
 
@@ -228,28 +225,33 @@ public class Player extends JFrame implements Serializable {
                 System.out.println("waitingForData()-- Whileloop startar");
                 try {
                     System.out.println("Innanför try-catch");
-                    s = (String) inputStream.readObject();
+                    s = String.valueOf(inputStream.readObject());
                     System.out.println("1 " + s);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
-                }
-            }
-            switch (s) {
-                case "Questions":
+                } finally {
                     try {
-                        System.out.println("Case Questions running");
-                        listOfQuestions = (List<Question>) inputStream.readObject();
-                        //                    s = String.valueOf(inputStream.readObject());
-                        System.out.println("Switch confirm2");
-                        break;
+                        inputStream.close();
                     } catch (IOException e) {
-                        e.printStackTrace(System.out);
-                        throw new RuntimeException(e);
-                    } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
+                }
+            }
+            if (s.equals("Questions")) {
+                try {
+                    System.out.println("Case Questions running");
+                    listOfQuestions = (List<Question>) inputStream.readObject();
+                    //                    s = String.valueOf(inputStream.readObject());
+                    System.out.println("Switch confirm2");
+                    return;
+                } catch (IOException e) {
+                    e.printStackTrace(System.out);
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -319,8 +321,9 @@ public class Player extends JFrame implements Serializable {
 
         //Väntar på att användare väljer kategori.  Skickar sedan info till servern. Nullar selectedCategory efter skickat till server.
         public void waitingForSelection() {
-
+            System.out.println("asdasdasd");
             while (selectedCategory == null) {
+                System.out.println("ytoyotyotoy");
             }
             sendListBackToServer(categoryOptions, selectedCategory);
 

@@ -173,7 +173,6 @@ public class GUI extends JFrame {
                 categoryCounter = 0;
 
                 if (player.getPlayerID() == 2) {
-                    System.out.println("Innanför player2 scenbyte");
                     changeScene(lobbyPanel, waitingPanel);
 
                 } else {
