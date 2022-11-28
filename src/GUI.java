@@ -234,7 +234,8 @@ public class GUI extends JFrame {
                 player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
                 player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
 
-                while(player.getCsc().getListOfQuestions().isEmpty()) {
+                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
+
                 }
 
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
@@ -254,8 +255,12 @@ public class GUI extends JFrame {
                 player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
                 player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
 
-                while(player.getCsc().getListOfQuestions().isEmpty()) {
+
+                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
+
                 }
+//                while(player.getCsc().getListOfQuestions().isEmpty()) {
+//                }
 
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
                 changeScene(categoryPanel, playPanel);
@@ -274,9 +279,9 @@ public class GUI extends JFrame {
                 player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
                 player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
 
-                while(player.getCsc().getListOfQuestions().isEmpty()) {
-                }
+                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
+                }
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
                 changeScene(categoryPanel, playPanel);
 
