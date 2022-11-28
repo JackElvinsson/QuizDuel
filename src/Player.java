@@ -136,6 +136,17 @@ public class Player extends JFrame implements Serializable {
                                 System.out.println("Lyckades sätta kategorier");
                                 System.out.println("Sätter till wait");
                                 waitingForSelection();
+
+                            }
+                        });
+                        t2.start();
+                    }
+
+                    synchronized (this) {
+                        Thread t3 = new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
                                 System.out.println("Mellan waiting waitingForSelection() & waitingForData();");
                                 waitingForData();
                                 System.out.println("Sätter idle till false");
@@ -143,11 +154,10 @@ public class Player extends JFrame implements Serializable {
                                 System.out.println("idle är nu " + idle);
                             }
                         });
-                        t2.start();
+                        t3.start();
 
-                    }
 
-                } else if (playerID == 2) {
+                } if (playerID == 2) {
                     synchronized (this) {
                         Thread t3 = new Thread(new Runnable() {
                             @Override
@@ -159,31 +169,11 @@ public class Player extends JFrame implements Serializable {
 
                     }
                 }
-
-
-                /**
-                 if id = 2 wait for turn
-                 1 = lyssna efter objekt (listan)
-                 1. Tar emot objekt, svarar med lista + objekt.
-                 3. server tar emot lista & objekt (Servern markerar plyerID med att ha valt kategori)
-                 wait for turn
-
-                 server skickar till båda player. Lista med frågor
-                 (Serverside, gör om så att om du inte har valt, så ska du välja nästa.)
-                 player svarar på frågor, skickar tillbaka resultat.
-                 1. 0/1
-
-                 wait for turn(results)
-                 Wait for turn(kategori)
-
-                 */
-
-
-            } catch (IOException e) {
+            }
+        }catch (IOException e) {
                 System.out.println("IO Exception from CSC Constructor");
                 e.printStackTrace();
             }
-        }
 
 
         /**
@@ -191,8 +181,7 @@ public class Player extends JFrame implements Serializable {
          * <p>
          * Inparaametern ska vara det som man har valt i GUI't.
          */
-
-
+        }
         public void sendUserName(String chosenName) { //Inparameter är namnet som använder väljer i GUI't.
 
             try {
@@ -290,7 +279,7 @@ public class Player extends JFrame implements Serializable {
                 throw new RuntimeException(ex);
             }
 
-            System.out.println("Skickade till lista & kategori servern.");
+            System.out.println("Skickade  lista & kategori till servern.");
         }
 
         //Väntar på att användare väljer kategori.  Skickar sedan info till servern. Nullar selectedCategory efter skickat till server.
@@ -303,6 +292,7 @@ public class Player extends JFrame implements Serializable {
         }
     }
 }
+
 
 //    public static void main(String[] args) throws IOException {
 ////        Player p = new Player();
