@@ -83,8 +83,8 @@ public class GameServer {
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
         private Socket socket;
-        private DataInputStream dataIn;
         private DataOutputStream dataOut;
+        private DataInputStream dataIn;
         private BufferedReader buffIn;
         private PrintWriter buffOut;
         ObjectOutputStream oos;

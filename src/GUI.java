@@ -213,9 +213,10 @@ public class GUI extends JFrame {
 
 //                while(player.getCsc().getListOfQuestions().get(0).getQuestionText().isBlank()) {
 //                }
-                while(player.getCsc().getIdle()) {
-                }
+                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
+                }
+                System.out.println("efter while loopen i kategori");
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
                 changeScene(categoryPanel, playPanel);
 

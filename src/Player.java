@@ -136,24 +136,28 @@ public class Player extends JFrame implements Serializable {
                                 System.out.println("Lyckades sätta kategorier");
                                 System.out.println("Sätter till wait");
                                 waitingForSelection();
+                                System.out.println("Mellan waiting waitingForSelection() & waitingForData();");
                                 waitingForData();
                                 System.out.println("Sätter idle till false");
                                 idle = false;
-                                System.out.println("idle är nu "+idle);
+                                System.out.println("idle är nu " + idle);
                             }
                         });
                         t2.start();
 
                     }
 
-                } else {
-                    Thread t3 = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            waitingForData();
-                        }
-                    });
-                    t3.start();
+                } else if (playerID == 2) {
+                    synchronized (this) {
+                        Thread t3 = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                waitingForData();
+                            }
+                        });
+                        t3.start();
+
+                    }
                 }
 
 
@@ -207,37 +211,12 @@ public class Player extends JFrame implements Serializable {
         public void waitingForData() {
             System.out.println("Client waitingForData()");
             String s = "";
-//
-//
-//            while (s.isBlank()) {
-//                try {
-//                    s = (String) inputStream.readObject();
-//
-//                    System.out.println("1 " + s);
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                } catch (ClassNotFoundException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                if (s.equals("Questions")) {
-//                    try {
-//
-//
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    } catch (ClassNotFoundException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//            }
 
-            while (s.equals("")) {
+            while (s.isBlank()) {
                 System.out.println("waitingForData()-- Whileloop startar");
                 try {
                     System.out.println("Innanför try-catch");
-                    s = String.valueOf(inputStream.readObject());
-
+                    s = (String) inputStream.readObject();
                     System.out.println("1 " + s);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -245,34 +224,22 @@ public class Player extends JFrame implements Serializable {
                     throw new RuntimeException(e);
                 }
             }
-            switch (s.trim()) {
+            switch (s) {
                 case "Questions":
                     try {
                         System.out.println("Case Questions running");
                         listOfQuestions = (List<Question>) inputStream.readObject();
-
-                        System.out.println("2");
+                        //                    s = String.valueOf(inputStream.readObject());
+                        System.out.println("Switch confirm2");
+                        break;
                     } catch (IOException e) {
+                        e.printStackTrace(System.out);
                         throw new RuntimeException(e);
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
             }
         }
-//        public void waitforlist() {
-//
-//            if (playerID==1){
-//                categoryOptions=((List<Kategori>) inputStream.readObject());
-//                System.out.println("Lyckades sätta kategorier");
-//                synchronized(this){
-//                    System.out.println("Sätter till wait");
-//                    if(selectedCategory==null) {
-//                        wait(3000);
-//                    }
-//                    waitingForSelection();
-//                }
-//            }
-//        }
 
 
         public void receiveName() {
