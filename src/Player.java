@@ -69,10 +69,8 @@ public class Player extends JFrame implements Serializable {
         private Socket socket;
         private DataInputStream dataIn;
         private DataOutputStream dataOut;
-        private BufferedReader inputBuffered;
-        private PrintWriter outputPrint;
-        ObjectInputStream inputStream;
         ObjectOutputStream outputStream;
+        ObjectInputStream inputStream;
         private boolean idle = true;
 
         public boolean getIdle() {
@@ -98,12 +96,12 @@ public class Player extends JFrame implements Serializable {
             System.out.println("---Client---");
             try {
                 socket = new Socket("localhost", 52731);
-                dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
+                dataIn = new DataInputStream(socket.getInputStream());
                 ////////////////////////////////////////////////////////////////
 
-                inputStream = new ObjectInputStream(socket.getInputStream());
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
+                inputStream = new ObjectInputStream(socket.getInputStream());
                 /////////////////////////////////////////////////////////////////
 
                 playerID = dataIn.readInt(); //Läser in playerID från server
@@ -113,6 +111,7 @@ public class Player extends JFrame implements Serializable {
                 } else {
                     otherPlayer = 1;
                 }
+
 
                 System.out.println("My id is: " + playerID);
                 sendUserName(userName);
@@ -133,6 +132,7 @@ public class Player extends JFrame implements Serializable {
                                 } catch (ClassNotFoundException e) {
                                     throw new RuntimeException(e);
                                 }
+
                                 System.out.println("Lyckades sätta kategorier");
                                 System.out.println("Sätter till wait");
                                 waitingForSelection();
@@ -143,6 +143,7 @@ public class Player extends JFrame implements Serializable {
                                 System.out.println("idle är nu " + idle);
                             }
                         });
+
                         t2.start();
 
                     }
@@ -202,11 +203,19 @@ public class Player extends JFrame implements Serializable {
                 System.out.println("Försöker skicka namn, " + chosenName + " till server");
                 dataOut.writeUTF(chosenName);
                 System.out.println("Skickat namnet");
-                dataOut.flush();
+
 
             } catch (IOException ex) {
                 System.out.println("IOException from sendUserName() CSC");
+            } finally {
+                try {
+                    dataOut.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
+
 
         }
 
@@ -280,6 +289,12 @@ public class Player extends JFrame implements Serializable {
                 outputStream.writeObject(senderString);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             try {
@@ -291,6 +306,12 @@ public class Player extends JFrame implements Serializable {
 
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             System.out.println("Skickade till lista & kategori servern.");

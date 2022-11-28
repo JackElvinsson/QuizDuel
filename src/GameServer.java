@@ -112,9 +112,15 @@ public class GameServer {
                 ois = new ObjectInputStream(socket.getInputStream());
 
 
-                oos.flush();
+
             } catch (IOException e) {
                 System.out.println("IO Exception from SSC Constructor");
+            } finally {
+                try {
+                    oos.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -200,10 +206,16 @@ public class GameServer {
                 System.out.println("sendListOfCategoryOptions: " + optionsList.get(2).getCategoryName());
                 System.out.println("sendListOfCategoryOptions: " + optionsList.get(3).getCategoryName());
 
-                oos.flush();
+
             } catch (IOException ex) {
                 ex.printStackTrace();
                 System.out.println("IOException from sendListOfCategoryOptions");
+            } finally {
+                try {
+                    oos.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -249,6 +261,12 @@ public class GameServer {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                try {
+                    oos.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 //
 //              dataOut.writeUTF(senderString);
@@ -259,6 +277,13 @@ public class GameServer {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            finally {
+                try {
+                    oos.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             System.out.println("Questions sent, after outpustream. First question, index 0: " + listOfQuestions.get(0).getQuestionText());
         }
