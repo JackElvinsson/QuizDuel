@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
 
-public class Client extends JFrame implements Serializable {
+public class Client extends JFrame implements Serializable, Closeable {
 
 
     private int playerID;
@@ -22,6 +22,7 @@ public class Client extends JFrame implements Serializable {
     private GUI gui;
     private ClientSideConnection csc;
     private boolean myTurn = true;
+
 
     public Client() {
 
@@ -117,8 +118,7 @@ public class Client extends JFrame implements Serializable {
             } catch (UnknownHostException | InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
+                System.out.println("IO Exception from CSC Constructor");
                 throw new RuntimeException(e);
             }
 
@@ -345,7 +345,6 @@ public class Client extends JFrame implements Serializable {
                 }
             }
         }
-
     }
 
     public static void main(String[] args) throws IOException {
@@ -355,4 +354,4 @@ public class Client extends JFrame implements Serializable {
 
     }
 
-    }
+}
