@@ -94,11 +94,8 @@ public class Client extends JFrame implements Serializable {
                         setPlayerName(gui.user.getName());
                     }
 
-                    System.out.println("namnet är satt: " + playerName);
-
-                    System.out.println("IO Exception from CSC Constructor");
-
-                } catch (UnknownHostException e) {
+                System.out.println("namnet är satt: " + playerName);
+            } catch (UnknownHostException | InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -121,37 +118,163 @@ public class Client extends JFrame implements Serializable {
 
 
         public void listeningPostClient() {
-            while(true){
-            String postIdentifier = "";  //postIdentifier skickas av objektstream från server.
-            while (postIdentifier.isBlank()) {
-                try {
-                    postIdentifier = (String) inputStream.readObject();
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+            while (true) {
+                System.out.println("listeningPostClient är aktiv");
+                String postIdentifier = "";  //postIdentifier skickas av objektstream från server.
+                while (postIdentifier.isBlank()) {
+                    try {
+                        postIdentifier = (String) inputStream.readObject();
+                        System.out.println("postIdentifier = " + postIdentifier);
+                    } catch (IOException | ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                switch (postIdentifier) {
+                    case "retrieveOpponentName":
+                        getAndSetOpponentName();
+                        break;
+                    case "playersReady":
+                        System.out.println("Kallar på metoden playersReady() från switch-case.");
+                        playersReady();
+                        System.out.println("Metoden är kallad");
+                        break;
+                    case "getCategoryOptionsList":
+                        displayCategoryOptions();
+                        break;
+                    case "Questions":
+                        readQuestions();
+                        break;
                 }
             }
-            switch (postIdentifier) {
-                case "hej":
-
-                    break;
-                case "123":
-
-                    break;
-            }
-
         }
 
-        public void sendPlayerName(String playerName) {
-            String senderIDName = "sendPlayerName";
+        public void startGamePlayer1() {
+            if (playerID == 1) {
+                String senderID = "startGamePlayer1";
+                try {
+                    outputStream.writeObject(senderID);
+
+                } catch (IOException ex) {
+                    System.out.println("IOException from startGamePlayer1()");
+                    throw new RuntimeException(ex);
+                } finally {
+                    try {
+                        outputStream.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+
+        public void displayCategoryOptions() {
             try {
-                System.out.println("Sending " + senderIDName + " to server");
-                outputStream.writeObject(senderIDName);
-                outputStream.writeObject(playerName);
-            } catch (IOException ex) {
+                listOfCategoryOptions = (List<Kategori>) inputStream.readObject();
+
+            } catch (IOException | ClassNotFoundException ex) {
                 System.out.println("IOException from sendPlayerName()");
                 throw new RuntimeException(ex);
             }
 
+            gui.categoryListTaxi(listOfCategoryOptions);
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            gui.changeScene(gui.getLobbyPanel(), gui.getCategoryPanel());
+
+            while (!gui.isSelectedCheck()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            gui.setSelectedCheck(true);
+            askForQuestions();
+
+        }
+
+
+        public void readQuestions() {
+
+
+            try {
+                listOfQuestions = (List<Question>) inputStream.readObject();
+                System.out.println("Received List of questions. Questiontext: " +listOfQuestions.get(0).getQuestionText());
+
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+            gui.questionListTaxi(listOfQuestions);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (myTurn) {
+                gui.changeScene(gui.getCategoryPanel(), gui.getPlayPanel());
+            } else {
+                gui.changeScene(gui.getWaitingPanel(), gui.getPlayPanel());
+            }
+        }
+
+        public void askForQuestions() {
+
+            String senderID = "retrieveQuestions";
+
+            try {
+                outputStream.writeObject(senderID);
+                outputStream.writeObject(gui.getSelectedItem());
+                System.out.println("Skickar tillbaks valda kategorin till server");
+                System.out.println("4 " + gui.getSelectedItem().getCategoryName());
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
+        }
+
+        public void playersReady() {
+            System.out.println("Försöker trigga scenbyte");
+            gui.changeScene(gui.getLobbyPanel(), gui.getWaitingPanel());
+            System.out.println("Scenbyte genomfört--?");
+
+
+        }
+
+        public void sendPlayerName(String playerName) {
+            String senderID = "sendPlayerName";
+            try {
+
+                System.out.println("Sending " + senderID + " to server");
+                outputStream.writeObject(senderID);
+                System.out.println("Efter IDName");
+                outputStream.writeObject(playerName);
+                System.out.println("efter playerName");
+
+            } catch (IOException ex) {
+                System.out.println("IOException from sendPlayerName()");
+                ex.printStackTrace();
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         public void getAndSetOpponentName() { //Skickar förfrågan till server, får tillbaka opponentName
@@ -159,17 +282,10 @@ public class Client extends JFrame implements Serializable {
             String opponentName = "";
 
             try {
-                System.out.println("Sending " + senderIDName + " to server");
-                outputStream.writeObject(senderIDName);
-            } catch (IOException ex) {
-                System.out.println("IOException from getOpponentName()- When sending request string, senderIDName, to server");
-                throw new RuntimeException(ex);
-            }
-
-            try {
                 while (opponentName.isBlank()) {
                     opponentName = (String) inputStream.readObject();
                 }
+
                 System.out.println("Got opponentName from server: " + opponentName);
             } catch (IOException ex) {
                 System.out.println("IOException from getOpponentName()- When trying to recieve back name String");
@@ -177,7 +293,7 @@ public class Client extends JFrame implements Serializable {
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            setOpponentName(opponentName);
+
             gui.getOppName().setText(opponentName);
 
         }

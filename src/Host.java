@@ -11,12 +11,15 @@ public class Host {
     private int numPlayers;
     private ServerSideConnection player1;
     private ServerSideConnection player2;
-    private int turnsMade;
+
+    private int numberOfQuestions =1;
+    private int turnsMade = 0;
     private int maxTurns;
     private int[] values;
     private int player1ButtonNum;
     private int player2ButtonNum;
-
+    private boolean player1Ready = false;
+    private boolean player2Ready = false;
 
     private String player1Name = "";
     private String player2Name = "";
@@ -125,6 +128,7 @@ public class Host {
                 }
             }
 
+
             Thread serverListenerThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -136,16 +140,21 @@ public class Host {
 
             System.out.println("PlayerID: "+playerID+" Efter ListeningPost är startad");
 
-            while (player2Name.isBlank() && player1Name.isBlank()) {
+            while (player2Name.isBlank() || player1Name.isBlank()) {
+
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-            System.out.println("PlayerID" + playerID + "is sending name");
-            sendOpponentName();
-            System.out.println("playerID:" + playerID + " Name sent to oppponent");
+            System.out.println("PlayerID:" + playerID + "is trying to retrieve opponents name");
+            retrieveOpponentName();
+            System.out.println("playerID:" + playerID + " ran retrieveOpponentName() method.");
+
+
+            playersReady();
+
 
         }
 
@@ -156,12 +165,11 @@ public class Host {
          */
         public void listeningPostServer() {
             while (true) {
-                System.out.println("listeningPost är aktiv");
+                System.out.println("PlayerID:" + playerID + "listeningPost är aktiv");
                 String postIdentifier = "";//postIdentifier skickas av objektstream från klient.
                 while (postIdentifier.isBlank()) {
                     try {
                         postIdentifier = (String) inputStream.readObject();
-                        System.out.println(postIdentifier);
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                         System.out.println("EXCEPTION IN LISTENINGPOSTSERVER");
@@ -173,9 +181,26 @@ public class Host {
                         getAndSetPlayerName();
                         break;
                     case "getOpponentName":
-                        sendOpponentName();
+                        retrieveOpponentName();
+                        break;
+                    case "handShake":
+                        playerReady();
+                        break;
+                    case "startGamePlayer1":
+                        getCategoryOptionsList();
+                        break;
+                    case "retrieveQuestions":
+                        categoryOptionsReturn();
                         break;
                 }
+            }
+        }
+
+        public void playerReady() {
+            if (playerID == 1) {
+                player1Ready = true;
+            } else if (playerID == 2) {
+                player2Ready = true;
             }
         }
 
@@ -186,7 +211,7 @@ public class Host {
                     System.out.println("Playername loop");
                     playername = (String) inputStream.readObject();
                 }
-                System.out.println("playerID" + playerID + " sent name: " + playername);
+                System.out.println("playerID:" + playerID + " sent name: " + playername);
             } catch (IOException ex) {
                 System.out.println("IOException from getAndSetOpponentName()- When trying to receive  name String");
                 throw new RuntimeException(ex);
@@ -194,15 +219,47 @@ public class Host {
                 throw new RuntimeException(e);
             }
             if (playerID == 1) {
-                setPlayer1Name(playername);
-            }
-            if (playerID == 2) {
-                setPlayer2Name(playername);
+                player1Name = playername;
+            } else if (playerID == 2) {
+                player2Name = playername;
             }
         }
 
-        public void getOpponentName() {
-            String opponentName="";
+
+        public void playersReady() {
+            String senderID = "playersReady";
+
+            while (!player1Ready || !player2Ready) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Both players are ready");
+            }
+
+            try {
+                System.out.println("playerID" + playerID + " is sending ready signal");
+                outputStream.writeObject(senderID);
+                System.out.println("playerID" + playerID + "has sent ready signal");
+
+            } catch (IOException ex) {
+                System.out.println("IOException from playersReady()");
+                throw new RuntimeException(ex);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+
+        public void retrieveOpponentName() {
+            String opponentName = "";
+            String senderID = "retrieveOpponentName";
             if (playerID == 1) {
                 opponentName = player2Name;
             }
@@ -230,28 +287,65 @@ public class Host {
          * (default, 4st kategorier)
          */
         public void getCategoryOptionsList() {
+            System.out.println("Skickar lista med kategorival.");
+            String senderID = "getCategoryOptionsList";
             setCategoryOptions(gameInit.getCategoryOptions());
+            try {
+                outputStream.writeObject(senderID);
+                outputStream.writeObject(categoryOptions);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                turnsMade++;
+            }
         }
 
         /**
          * Gör de icke-valda kategorierna tillgängliga igen.
          */
         public void categoryOptionsReturn() {
-
             try {
-                List<Kategori> selectedList = (List<Kategori>) inputStream.readObject();
-                System.out.println("selectedList read");
                 Kategori selectedItem = (Kategori) inputStream.readObject();
                 System.out.println("selectedItem read");
-                gameInit.makeNotChosenCategoryAvailable(selectedList, selectedItem);
                 gameInit.setSelectedCategory(selectedItem);
+                gameInit.makeNotChosenCategoryAvailable(categoryOptions, selectedItem);
+                listOfQuestions = gameInit.getQuestions(selectedItem, numberOfQuestions);
 //                selectedCategoryForRound=selectedItem;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 System.out.println("EXCEPTION IN categoryOptionsReturn");
             }
+            player1.sendQuestions();
+            player2.sendQuestions();
+        }
 
+        public void sendQuestions() {
+            System.out.println("Trying to send questions");
+            String senderString = "Questions";
+            try {
+                outputStream.writeObject(senderString);
+                outputStream.writeObject(listOfQuestions);
 
+                System.out.println("skickade sträng:" + senderString);
+                System.out.println("Skickade listOfQuestions: " + listOfQuestions.size());
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+            System.out.println("Questions sent, after outpustream. First question, index 0: " + listOfQuestions.get(0).getQuestionText());
         }
 
 

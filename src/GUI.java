@@ -26,6 +26,38 @@ public class GUI extends JFrame {
     protected int categoriesPerRound = rows;
     protected int answerCounter = 0;
     protected int categoryCounter = 0;
+    private Kategori selectedItem;
+
+    public boolean isSelectedCheck() {
+        return selectedCheck;
+    }
+
+    public void setSelectedCheck(boolean selectedCheck) {
+        this.selectedCheck = selectedCheck;
+    }
+
+    private boolean selectedCheck = false;
+
+    private List<Kategori> selectedList;
+
+    public List<Kategori> getSelectedList() {
+        return selectedList;
+    }
+
+    public void setSelectedList(List<Kategori> selectedList) {
+        this.selectedList = selectedList;
+    }
+
+
+    public Kategori getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(Kategori selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+
     List<Integer> integerList;
     JTextArea[][] boxGrid;
     JTextArea[][] boxGrid2;
@@ -78,6 +110,15 @@ public class GUI extends JFrame {
     private JButton thirdAnswer;
     private JButton fourthAnswer;
     private JButton waitingPanelGiveUp;
+
+    public JLabel getPlayerWaiting() {
+        return playerWaiting;
+    }
+
+    public void setPlayerWaiting(JLabel playerWaiting) {
+        this.playerWaiting = playerWaiting;
+    }
+
     private JLabel playerWaiting;
     private JPanel statsPanel;
     private JButton continueGame;
