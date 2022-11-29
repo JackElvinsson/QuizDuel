@@ -1,19 +1,27 @@
+import Questions.Categories.Kategori;
+import Questions.Question;
+
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.*;
 
 public class Client extends JFrame implements Serializable {
 
 
     private int playerID;
+    //    private int turnOrder;
     private int opponentID;
     private String playerName;
-    private String opponentName;
+    private String opponentName = "";
     private DataInputStream dataIn;
     private DataOutputStream dataOut;
+    private List<Question> listOfQuestions;
+    private List<Kategori> listOfCategoryOptions;
     private GUI gui;
     private ClientSideConnection csc;
+    private boolean myTurn = true;
 
     public Client() {
 
@@ -74,7 +82,15 @@ public class Client extends JFrame implements Serializable {
 
         ObjectOutputStream outputStream;
 
-
+        /**
+         * 1. Anslutning sker.
+         * 2. Får playerID från servern.
+         * 3. Väntar på att spelare sätter namn i GUI
+         * 4. Skickar spelarnamn till server med metoden: sendPlayerName(getPlayerName());
+         * 5. Startar en tråd som kör igång metoden: listeningPostClient()
+         * 6. skickar att man klickat på spela till servern  med metoden: handShake(); -
+         * 7. startGamePlayer1(); Player1 får kategorier. Sen sköter server vems tur det är.
+         */
         public ClientSideConnection() {
             System.out.println("---Client---");
             try {
@@ -83,16 +99,19 @@ public class Client extends JFrame implements Serializable {
                 inputStream = new ObjectInputStream(socket.getInputStream());
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
 
-                    playerID = inputStream.readInt();
-                    System.out.println("I am playerID:" + playerID);
+                playerID = inputStream.readInt();
+                System.out.println("I am playerID:" + playerID);
+                if (playerID == 2) {
+                    myTurn = false;
+                }
 
 
-                    synchronized (this) {
-                        while (gui.user.getName().isBlank()) {
-                            wait(800);
-                        }
-                        setPlayerName(gui.user.getName());
+                synchronized (this) {
+                    while (gui.user.getName().isBlank()) {
+                        wait(800);
                     }
+                    setPlayerName(gui.user.getName());
+                }
 
                 System.out.println("namnet är satt: " + playerName);
             } catch (UnknownHostException | InterruptedException e) {
@@ -105,7 +124,6 @@ public class Client extends JFrame implements Serializable {
 
 
             sendPlayerName(getPlayerName());
-
             Thread clientListenerThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -114,6 +132,9 @@ public class Client extends JFrame implements Serializable {
             });
             clientListenerThread.start();
 
+
+            handShake();
+            startGamePlayer1();
         }
 
 
@@ -278,8 +299,6 @@ public class Client extends JFrame implements Serializable {
         }
 
         public void getAndSetOpponentName() { //Skickar förfrågan till server, får tillbaka opponentName
-            String senderIDName = "getOpponentName";
-            String opponentName = "";
 
             try {
                 while (opponentName.isBlank()) {
@@ -295,7 +314,36 @@ public class Client extends JFrame implements Serializable {
             }
 
             gui.getOppName().setText(opponentName);
+            gui.getPlayerWaiting().setText(opponentName + " Väljer kategori..");
+        }
 
+
+        public void handShake() {
+
+            while (!gui.isReady) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            String senderID = "handShake";
+            try {
+                System.out.println("Sending senderID");
+                outputStream.writeObject(senderID);
+                System.out.println("Efter senderID");
+
+            } catch (IOException ex) {
+                System.out.println("IOException from sendPlayerName()");
+                throw new RuntimeException(ex);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
