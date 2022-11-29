@@ -111,10 +111,8 @@ public abstract class Kategori implements Serializable {
 //Todo Göra så om det är slut på valda frågor att det inte fastnar i en loop.
     public List<Question> generateQuestions(Kategori chosenCategory, int numberOfQuestions) {
         List<Question> listWithQuestions = new ArrayList<>();
-        System.out.println(chosenCategory.getListOfQuestions().get(0));
         for (int i = 0; i < numberOfQuestions; i++) {
             Question q = chosenCategory.getListOfQuestions().get(i);
-            System.out.println(chosenCategory.getListOfQuestions().get(i));
             if (!q.getUsed()) {
                 q.shuffleQAnswers();
                 listWithQuestions.add(q);

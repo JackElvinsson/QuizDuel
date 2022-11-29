@@ -1,10 +1,10 @@
-import java.io.IOException;
-
-public class main {
-    public static void main(String[] args) throws IOException {
+//import java.io.IOException;
+//
+//public class main {
+//    public static void main(String[] args) throws IOException {
 
 //        GameInit gm = new GameInit();
-        new GUI();
+//        new GUI();
 //        List<Kategori> testlista = gm.getCategoryOptions();
 //        List<Kategori> testlista = new ArrayList<>();
 //        ;
@@ -14,6 +14,6 @@ public class main {
 //        System.out.println(testlista.get(2).getCategoryName());
 //        System.out.println(testlista.get(3).getCategoryName());
 
-
-    }
-}
+//
+//    }
+//}

@@ -129,7 +129,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 user.setName(textField1.getText());
-                if(!textField1.getText().isBlank()) {
+                if (!textField1.getText().isBlank()) {
                     tillLobbyButton.setEnabled(true);
                 }
             }
@@ -212,7 +212,7 @@ public class GUI extends JFrame {
 
 //                while(player.getCsc().getListOfQuestions().get(0).getQuestionText().isBlank()) {
 //                }
-                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
+                while (!player.getSelectedCategory().getCategoryName().equals(firstCategory.getText())) {
 
                 }
                 System.out.println("efter while loopen i kategori");
@@ -233,7 +233,7 @@ public class GUI extends JFrame {
                 player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
                 player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
 
-                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
+                while (!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
                 }
 
@@ -255,7 +255,7 @@ public class GUI extends JFrame {
                 player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
 
 
-                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
+                while (!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
                 }
 //                while(player.getCsc().getListOfQuestions().isEmpty()) {
@@ -278,7 +278,7 @@ public class GUI extends JFrame {
                 player.setSelectedCategory(player.getCategoryOptions().get(categoryTracker));
                 player.getCsc().sendListBackToServer(player.getCategoryOptions(), player.getSelectedCategory());
 
-                while(!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
+                while (!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
                 }
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
@@ -302,9 +302,8 @@ public class GUI extends JFrame {
 
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
-                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer, firstAnswer);
+//                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+//                    markUserAnswer(correctAnswer, firstAnswer);
                 }
             }
         });
@@ -323,9 +322,8 @@ public class GUI extends JFrame {
 
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
-                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer, secondAnswer);
+//                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+//                    markUserAnswer(correctAnswer, secondAnswer);
                 }
             }
         });
@@ -344,9 +342,8 @@ public class GUI extends JFrame {
 
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
-                            String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer, thirdAnswer);
+//                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+//                    markUserAnswer(correctAnswer, thirdAnswer);
                 }
             }
         });
@@ -365,9 +362,8 @@ public class GUI extends JFrame {
 
                     //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 
-//                    isCorrectAnswer(categoryOptions, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
-                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
-                    markUserAnswer(correctAnswer, fourthAnswer);
+//                    String correctAnswer = markCorrectAnswer(player.getCategoryOptions(), firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, categoryTracker);
+//                    markUserAnswer(correctAnswer, fourthAnswer);
                 }
             }
         });
@@ -529,7 +525,7 @@ public class GUI extends JFrame {
 
     public void setQuestionAndAnswers(List<Question> listOfQuestions, JTextArea questionTextArea, JButton firstAnswer, JButton secondAnswer, JButton thirdAnswer, JButton fourthAnswer, int i) {
 
-        while(listOfQuestions.isEmpty()) {
+        if (!listOfQuestions.isEmpty()) {
             questionTextArea.setText(listOfQuestions.get(0).getQuestionText());
             firstAnswer.setText(listOfQuestions.get(0).getAnswer1().getAnswerText());
             secondAnswer.setText(listOfQuestions.get(0).getAnswer2().getAnswerText());

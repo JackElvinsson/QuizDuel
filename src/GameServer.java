@@ -206,6 +206,7 @@ public class GameServer {
                 System.out.println("sendListOfCategoryOptions: " + optionsList.get(1).getCategoryName());
                 System.out.println("sendListOfCategoryOptions: " + optionsList.get(2).getCategoryName());
                 System.out.println("sendListOfCategoryOptions: " + optionsList.get(3).getCategoryName());
+                System.out.println();
 
 
             } catch (IOException ex) {
@@ -258,20 +259,9 @@ public class GameServer {
             System.out.println("Trying to send questions");
             String senderString = "Questions";
             try {
-                oos.writeObject(senderString);
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                try {
-                    oos.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-//
 //              dataOut.writeUTF(senderString);
-            try {
+                oos.writeObject(senderString);
                 oos.writeObject(listOfQuestions);
 
                 System.out.println("skickade sträng:" + senderString);
@@ -309,6 +299,7 @@ public class GameServer {
                         System.out.println("Försöker ta emot lista och objekt");
                         List<Kategori> selectedList = (List<Kategori>) ois.readObject();
                         System.out.println("fått tillbaka listan med kategorier.");
+                        System.out.println("Object 0 från tillbakaskickad lista: " + selectedList.get(0).getCategoryName());
 
                         Kategori selectedItem = (Kategori) ois.readObject();
                         System.out.println("Tagit emot 'selectedItem' försöker sätta ChosenCategory");

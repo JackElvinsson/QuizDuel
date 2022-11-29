@@ -135,9 +135,10 @@ public class Player extends JFrame implements Serializable {
 
                                 System.out.println("Lyckades sätta kategorier");
                                 System.out.println("Sätter till wait");
-                                waitingForSelection();
-                                System.out.println("Mellan waiting waitingForSelection() & waitingForData();");
                                 waitingForData();
+                                System.out.println("Mellan waiting waitingForSelection() & waitingForData();");
+                                waitingForSelection();
+                                System.out.println("Efter waitingforselection");
                                 System.out.println("Sätter idle till false");
                                 idle = false;
                                 System.out.println("idle är nu " + idle);
@@ -232,11 +233,7 @@ public class Player extends JFrame implements Serializable {
                 } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 } finally {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+
                 }
             }
             if (s.equals("Questions")) {
@@ -286,20 +283,11 @@ public class Player extends JFrame implements Serializable {
             System.out.println("1 ---Försöker--- skicka lista & kategori till server");
 
             String senderString = "sendListBackToServer";
+
             try {
                 System.out.println("2 " + senderString);
                 outputStream.writeObject(senderString);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } finally {
-                try {
-                    outputStream.flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
-            try {
                 outputStream.writeObject(selectedList);
                 System.out.println("3 " + selectedList.get(0).getCategoryName());
 
@@ -316,14 +304,13 @@ public class Player extends JFrame implements Serializable {
                 }
             }
 
-            System.out.println("Skickade till lista & kategori servern.");
+            System.out.println("Skickade lista & vald kategori till servern.");
         }
 
         //Väntar på att användare väljer kategori.  Skickar sedan info till servern. Nullar selectedCategory efter skickat till server.
         public void waitingForSelection() {
             System.out.println("asdasdasd");
             while (selectedCategory == null) {
-                System.out.println("ytoyotyotoy");
             }
             sendListBackToServer(categoryOptions, selectedCategory);
 
