@@ -71,6 +71,7 @@ public class Player extends JFrame implements Serializable {
         private DataOutputStream dataOut;
         ObjectOutputStream outputStream;
         ObjectInputStream inputStream;
+        private boolean isChoosing;
         private boolean idle = true;
 
         public boolean getIdle() {
@@ -108,8 +109,10 @@ public class Player extends JFrame implements Serializable {
                 //sätter other player beroende på vilket ID man fått.
                 if (playerID == 1) {
                     otherPlayer = 2;
+                    isChoosing = true;
                 } else {
                     otherPlayer = 1;
+                    isChoosing = false;
                 }
 
 
@@ -118,7 +121,7 @@ public class Player extends JFrame implements Serializable {
                 receiveName();
                 System.out.println("Opponent name: " + otherPlayerName);
 
-                if (playerID == 1) {
+                if (isChoosing) {
 
                     synchronized (this) {
                         Thread t2 = new Thread(new Runnable() {
@@ -142,6 +145,7 @@ public class Player extends JFrame implements Serializable {
                                 System.out.println("Sätter idle till false");
                                 idle = false;
                                 System.out.println("idle är nu " + idle);
+
                             }
                         });
 
@@ -161,6 +165,8 @@ public class Player extends JFrame implements Serializable {
 
                     }
                 }
+
+                isChoosing ^= isChoosing;
 
 
                 /**

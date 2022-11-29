@@ -15,9 +15,14 @@ public class GameServer {
     public String player1Name = "";
     public String player2Name = "";
 
+    private boolean isChoosing;
+
+    public void setIsChoosing(boolean b) {
+        this.isChoosing = b;
+    }
+
     public boolean player1Wait = true;
     public boolean player2Wait = true;
-
 
     public void setPlayer1Wait(boolean wait) {
         this.player1Wait = wait;
@@ -57,13 +62,21 @@ public class GameServer {
             System.out.println("Waiting for connections...");
             System.out.println(numPlayers);
             while (numPlayers < 2) {
+
+                if (numPlayers < 1) {
+                    isChoosing = true;
+                } else {
+                    isChoosing = false;
+                }
+
                 Socket s = ss.accept(); //Börjar accpetera anslutningar
                 System.out.println(numPlayers);
                 numPlayers++;
                 System.out.println("Player #" + numPlayers + " has connected");
-                ServerSideConnection ssc = new ServerSideConnection(s, numPlayers); //Sätter ID till siffran av numPlayers. 1 || 2.
+                ServerSideConnection ssc = new ServerSideConnection(s, numPlayers, isChoosing); //Sätter ID till siffran av numPlayers. 1 || 2.
                 if (numPlayers == 1) {
                     player1 = ssc;
+
                 } else {
                     player2 = ssc;
                 }
@@ -78,13 +91,9 @@ public class GameServer {
     }
 
     private class ServerSideConnection implements Runnable {
-
-        CountDownLatch countDownLatch = new CountDownLatch(1);
         private Socket socket;
         private DataOutputStream dataOut;
         private DataInputStream dataIn;
-        private BufferedReader buffIn;
-        private PrintWriter buffOut;
         ObjectOutputStream oos;
         ObjectInputStream ois;
         private int playerID;
@@ -99,8 +108,9 @@ public class GameServer {
         }
 
 
-        public ServerSideConnection(Socket s, int id) { //Constructor.
+        public ServerSideConnection(Socket s, int id, boolean b) { //Constructor.
 
+            isChoosing = b;
             socket = s;
             playerID = id;
 
@@ -110,7 +120,6 @@ public class GameServer {
                 dataOut = new DataOutputStream(socket.getOutputStream());
                 oos = new ObjectOutputStream(socket.getOutputStream());
                 ois = new ObjectInputStream(socket.getInputStream());
-
 
 
             } catch (IOException e) {
@@ -135,10 +144,12 @@ public class GameServer {
                     if (playerID == 1) {
                         player1Name = dataIn.readUTF();
                         System.out.println("Player 1 name is set to: " + player1Name);
+                        System.out.println("is choosing");
                         break;
                     } else if (playerID == 2) {
                         player2Name = dataIn.readUTF();
                         System.out.println("Player 2 name is set to: " + player2Name);
+                        System.out.println("is not choosing");
                         break;
                     }
                 }
@@ -151,12 +162,10 @@ public class GameServer {
                     System.out.println("Player " + playerID + " continues");
                 }
 
-
                 System.out.println("ID:" + playerID + " is Sending username to opponent");
                 sendUserName();
 
-
-                if (playerID == 1) {
+                if (!isChoosing) {
 
                     sendListOfCategoryOptions(categoryOptions);
 
@@ -168,13 +177,16 @@ public class GameServer {
                     stopOpponentIdle();
                     System.out.println("Klar med stopOpponentIdle()");
 
+
                 } else { //Player 2 väntar.
                     idleMe();
+
                 }
 
 
                 sendQuestions();
                 System.out.println("Klar med sendQuestions()");
+                isChoosing ^= isChoosing;
 
             } catch (IOException e) {
                 System.out.println("IOException from run() SSC");
@@ -254,7 +266,9 @@ public class GameServer {
             //TODO Lägg till hantering av antal frågor ifrån properties
         }
 
-
+        /**
+         * SPELARE 2 FÅR INTE senderString = "Questions"
+         */
         public void sendQuestions() {
             System.out.println("Trying to send questions");
             String senderString = "Questions";
@@ -268,8 +282,7 @@ public class GameServer {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            }
-            finally {
+            } finally {
                 try {
                     oos.flush();
                 } catch (IOException e) {

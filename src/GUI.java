@@ -14,14 +14,15 @@ import java.util.Random;
 
 public class GUI extends JFrame {
 
-//    MethodsGUI methodsGUI = new MethodsGUI();
+    //    MethodsGUI methodsGUI = new MethodsGUI();
+    private Player player;
 
     boolean isReady = false;
     //    Client client = new Client();
 //    IOUtils ioUtils = new IOUtils();
-    int rows = 1;
-    int columns = 2;
-    int categoryTracker = -1;
+    private int rows = 3;
+    private int columns = 4;
+    protected int categoryTracker = -1;
     protected int questionsPerRound = columns;
     protected int categoriesPerRound = rows;
     protected int answerCounter = 0;
@@ -42,7 +43,6 @@ public class GUI extends JFrame {
         this.player = player;
     }
 
-    private Player player;
     // JFrame components
     private JPanel mainPanel;
     private JPanel startPanel;
@@ -92,6 +92,9 @@ public class GUI extends JFrame {
         playPanel.setVisible(false);
         waitingPanel.setVisible(false);
         statsPanel.setVisible(false);
+
+//        rows = player.getxRounds();
+//        columns = player.getxQuestions();
 
         // Stats gridPanel test
         statsGridPlayer.setLayout(new GridLayout(rows, columns, 10, 10));
@@ -215,6 +218,11 @@ public class GUI extends JFrame {
                 while (!player.getSelectedCategory().getCategoryName().equals(firstCategory.getText())) {
 
                 }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
                 System.out.println("efter while loopen i kategori");
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 0);
                 changeScene(categoryPanel, playPanel);
@@ -236,7 +244,13 @@ public class GUI extends JFrame {
                 while (!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
                 }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
 
+                System.out.println("efter while loopen i kategori");
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 1);
                 changeScene(categoryPanel, playPanel);
 
@@ -258,9 +272,13 @@ public class GUI extends JFrame {
                 while (!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
                 }
-//                while(player.getCsc().getListOfQuestions().isEmpty()) {
-//                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
 
+                System.out.println("efter while loopen i kategori");
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 2);
                 changeScene(categoryPanel, playPanel);
 
@@ -281,6 +299,13 @@ public class GUI extends JFrame {
                 while (!player.getSelectedCategory().toString().equals(firstCategory.getText())) {
 
                 }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                System.out.println("efter while loopen i kategori");
                 setQuestionAndAnswers(player.getCsc().getListOfQuestions(), playTextArea, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, 3);
                 changeScene(categoryPanel, playPanel);
 
