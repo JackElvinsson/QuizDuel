@@ -1,9 +1,7 @@
 import javax.swing.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Client extends JFrame implements Serializable {
 
@@ -12,6 +10,8 @@ public class Client extends JFrame implements Serializable {
     private int opponentID;
     private String playerName;
     private String opponentName;
+    private DataInputStream dataIn;
+    private DataOutputStream dataOut;
     private GUI gui;
     private ClientSideConnection csc;
 
@@ -59,29 +59,69 @@ public class Client extends JFrame implements Serializable {
         this.opponentName = opponentName;
     }
 
+    @Override
+    public void close() throws IOException {
+
+    }
+
     private class ClientSideConnection {
         private Socket socket;
+//
+//        private DataInputStream dataIn;
+//        private DataOutputStream dataOut;
 
         ObjectInputStream inputStream;
+
         ObjectOutputStream outputStream;
 
 
         public ClientSideConnection() {
             System.out.println("---Client---");
-            try (Socket socket = new Socket("localhost", 52731);
-                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());) {
-                playerID = inputStream.readInt();
+            try {
+
+                socket = new Socket("localhost", 52731);
+                inputStream = new ObjectInputStream(socket.getInputStream());
+                outputStream = new ObjectOutputStream(socket.getOutputStream());
+
+                    playerID = inputStream.readInt();
+                    System.out.println("I am playerID:" + playerID);
+
+
+                    synchronized (this) {
+                        while (gui.user.getName().isBlank()) {
+                            wait(800);
+                        }
+                        setPlayerName(gui.user.getName());
+                    }
+
+                    System.out.println("namnet är satt: " + playerName);
+
+                    System.out.println("IO Exception from CSC Constructor");
+
+                } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
             } catch (IOException e) {
-                System.out.println("IO Exception from CSC Constructor");
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
+
+
+            sendPlayerName(getPlayerName());
+            Thread clientListenerThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    listeningPostClient();
+                }
+            });
+            clientListenerThread.start();
+
         }
 
 
-
-        public void listeningPostClient(){
-            String postIdentifier="";//postIdentifier skickas av objektstream från klient.
-            while(postIdentifier.isBlank()) {
+        public void listeningPostClient() {
+            String postIdentifier = "";  //postIdentifier skickas av objektstream från server.
+            while (postIdentifier.isBlank()) {
                 try {
                     postIdentifier = (String) inputStream.readObject();
                 } catch (IOException | ClassNotFoundException e) {
@@ -89,11 +129,11 @@ public class Client extends JFrame implements Serializable {
                 }
             }
             switch (postIdentifier) {
-                case "sendPlayerName":
-                    getAndSetPlayerName();
+                case "hej":
+
                     break;
-                case "getOpponentName":
-                    getOpponentName();
+                case "123":
+
                     break;
             }
 
@@ -112,7 +152,7 @@ public class Client extends JFrame implements Serializable {
 
         }
 
-        public void getAndSetOpponentName() {
+        public void getAndSetOpponentName() { //Skickar förfrågan till server, får tillbaka opponentName
             String senderIDName = "getOpponentName";
             String opponentName = "";
 
@@ -138,11 +178,13 @@ public class Client extends JFrame implements Serializable {
             setOpponentName(opponentName);
         }
 
+    }
 
-        public static void main(String[] args) throws IOException {
-            Client c = new Client();
-            c.connectToServer();
-            c.startGUI();
-        }
+    public static void main(String[] args) throws IOException {
+        Client c = new Client();
+        c.startGUI();
+        c.connectToServer();
+
+    }
 
     }

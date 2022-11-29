@@ -124,17 +124,22 @@ public class GUI extends JFrame {
                 System.exit(0);
             }
         });
-
+        /**
+         * Första scenen. Till Lobby
+         * */
         textField1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 user.setName(textField1.getText());
+                textField1.setEnabled(false);//Användarnamnet sätts.
                 if(!textField1.getText().isBlank()) {
                     tillLobbyButton.setEnabled(true);
                 }
             }
         });
-
+        /**
+         * Knappen till Lobby
+         * */
         tillLobbyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,18 +152,14 @@ public class GUI extends JFrame {
                     changeScene(startPanel, lobbyPanel);
                 }
 
-                try {
-                    Player player = new Player(user.getName());
-                    setPlayer(player);
+                //                    Player player = new Player(user.getName());
+//                    setPlayer(player);
+//
+//                    player.connectToServer();
 
-                    player.connectToServer();
-
-                    while (oppName.getText().equals("Spelare2")) {
-                        oppName.setText(getPlayer().getOtherPlayerName());
-                    }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+//                    while (oppName.getText().equals("Spelare2")) {
+//                        oppName.setText(getPlayer().getOtherPlayerName());
+//                    }
             }
         });
 

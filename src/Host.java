@@ -1,6 +1,4 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -15,8 +13,9 @@ public class Host {
     private int[] values;
     private int player1ButtonNum;
     private int player2ButtonNum;
-    private String player1Name;
-    private String Player2Name;
+    private String player1Name="";
+    private String Player2Name="";
+//    private Socket socket;
 
     public String getPlayer1Name() {
         return player1Name;
@@ -35,11 +34,11 @@ public class Host {
     }
 
 
-    public Host() {
+    public Host()throws IOException {
         System.out.println("----Game Server is running----");
 
         try {
-            ss = new ServerSocket(52734);
+            ss = new ServerSocket(52731);
         } catch (IOException e) {
             System.out.println("IOEXCEPTION FROM CONSTRUCTOR!");
         }
@@ -55,7 +54,7 @@ public class Host {
                 System.out.println(numPlayers);
                 numPlayers++;
                 System.out.println("Player #" + numPlayers + " has connected");
-                ServerSideConnection ssc = new ServerSideConnection(s, numPlayers); //Sätter ID till siffran av numPlayers. 1 || 2.
+                ServerSideConnection ssc = new ServerSideConnection(s ,numPlayers); //Sätter ID till siffran av numPlayers. 1 || 2.
                 if (numPlayers == 1) {
                     player1 = ssc;
                 } else {
@@ -76,13 +75,15 @@ public class Host {
         private ObjectInputStream inputStream;
         private ObjectOutputStream outputStream;
         private int playerID;
+        private Socket socket;
 
-        public ServerSideConnection(int id) {
-
+        public ServerSideConnection(Socket s, int id) {
             playerID = id;
-            try (Socket socket = new Socket("localhost", 52731);
-                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());) {
+            socket = s;
+
+            try {
+                outputStream = new ObjectOutputStream(socket.getOutputStream());
+                inputStream = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e) {
                 System.out.println("IO Exception from SSC Constructor");
             }
@@ -91,8 +92,32 @@ public class Host {
 
         @Override
         public void run() {
+            System.out.println("Run is running.");
+            try {
+                outputStream.writeInt(playerID);
+                System.out.println("Sending playerID "+playerID);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
+            Thread serverListenerThread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Startar Listeningpost");
+                listeningPostServer();
+            }
+        });serverListenerThread.start();
 
+        while (!Player2Name.isBlank()&&!player1Name.isBlank()){
+            sendOpponentName();
+
+            }
         }
 
         public void listeningPostServer(){
@@ -104,12 +129,13 @@ public class Host {
                     throw new RuntimeException(e);
                 }
             }
+            System.out.println(postIdentifier);
             switch (postIdentifier) {
                 case "sendPlayerName":
                     getAndSetPlayerName();
                     break;
                 case "getOpponentName":
-                    getOpponentName();
+                    sendOpponentName();
                     break;
             }
 
@@ -120,6 +146,7 @@ public class Host {
 //            String opponentName;
             try {
                 while (playername.isBlank()) {
+                    System.out.println("Playername loop");
                     playername = (String) inputStream.readObject();
                 }
                 System.out.println("playerID" + playerID + " sent name: " + playername);
@@ -151,10 +178,21 @@ public class Host {
             } catch (IOException ex) {
                 System.out.println("IOException from getOpponentName()");
                 throw new RuntimeException(ex);
+            } finally {
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
 
+    }
+
+    public static void main(String[] args) throws IOException {
+        Host host = new Host();
+        host.acceptConnections();
     }
 
 }
