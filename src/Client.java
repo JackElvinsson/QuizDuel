@@ -108,6 +108,7 @@ public class Client extends JFrame implements Serializable {
 
 
             sendPlayerName(getPlayerName());
+
             Thread clientListenerThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -120,6 +121,7 @@ public class Client extends JFrame implements Serializable {
 
 
         public void listeningPostClient() {
+            while(true){
             String postIdentifier = "";  //postIdentifier skickas av objektstream från server.
             while (postIdentifier.isBlank()) {
                 try {
@@ -176,6 +178,8 @@ public class Client extends JFrame implements Serializable {
                 throw new RuntimeException(e);
             }
             setOpponentName(opponentName);
+            gui.getOppName().setText(opponentName);
+
         }
 
     }

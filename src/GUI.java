@@ -56,6 +56,15 @@ public class GUI extends JFrame {
     private JButton spela;
     private JButton lamnaLobby;
     private JLabel userName;
+
+    public void setOppName(JLabel oppName) {
+        this.oppName = oppName;
+    }
+
+    public JLabel getOppName() {
+        return oppName;
+    }
+
     private JLabel oppName;
     private JLabel userWins;
     private JLabel oppWins;

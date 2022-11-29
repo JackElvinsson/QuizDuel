@@ -3,38 +3,3 @@ Varje år ökar avståndet mellan månen och jorden, men med vilket avstånd?
 *3,8 cm
 0,42 mm
 66,42 cm
-Frågetext1
-svar1
-svar2
-svar3
-*svar4
-Frågetext2
-svar1
-svar2
-svar3
-*svar4
-Frågetext3
-svar1
-svar2
-svar3
-*svar4
-Frågetext4
-svar1
-svar2
-svar3
-*svar4
-Frågetext5
-svar1
-svar2
-svar3
-*svar4
-Frågetext6
-svar1
-svar2
-svar3
-*svar4
-Frågetext7
-svar1
-svar2
-svar3
-*svar4
