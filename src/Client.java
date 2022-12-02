@@ -11,12 +11,11 @@ public class Client extends JFrame implements Serializable, Closeable {
 
 
     private int playerID;
-    //    private int turnOrder;
+    
     private int opponentID;
     private String playerName;
     private String opponentName = "";
-    private DataInputStream dataIn;
-    private DataOutputStream dataOut;
+
     private List<Question> listOfQuestions;
     private List<Kategori> listOfCategoryOptions;
     private GUI gui;
@@ -90,7 +89,7 @@ public class Client extends JFrame implements Serializable, Closeable {
          * 4. Skickar spelarnamn till server med metoden: sendPlayerName(getPlayerName());
          * 5. Startar en tråd som kör igång metoden: listeningPostClient()
          * 6. skickar att man klickat på spela till servern  med metoden: handShake(); -
-         * 7. startGamePlayer1(); Player1 får kategorier. Sen sköter server vems tur det är.
+         * 7. startGame(); Player1 får kategorier. Sen sköter server vems tur det är.
          */
         public ClientSideConnection() {
             System.out.println("---Client---");
@@ -134,7 +133,7 @@ public class Client extends JFrame implements Serializable, Closeable {
 
 
             handShake();
-            startGamePlayer1();
+            startGame();
         }
 
 
@@ -169,14 +168,14 @@ public class Client extends JFrame implements Serializable, Closeable {
             }
         }
 
-        public void startGamePlayer1() {
-            if (playerID == 1) {
-                String senderID = "startGamePlayer1";
+        public void startGame() {
+            if (myTurn) {
+                String senderID = "startGame";
                 try {
                     outputStream.writeObject(senderID);
 
                 } catch (IOException ex) {
-                    System.out.println("IOException from startGamePlayer1()");
+                    System.out.println("IOException from startGame()");
                     throw new RuntimeException(ex);
                 } finally {
                     try {

@@ -73,6 +73,8 @@ public class Host {
 
     public void acceptConnections() {
         try {
+
+            Listening listening=new Listening();
             System.out.println("Waiting for connections...");
             System.out.println(numPlayers);
             while (numPlayers < 2) {
@@ -80,7 +82,7 @@ public class Host {
                 System.out.println(numPlayers);
                 numPlayers++;
                 System.out.println("Player #" + numPlayers + " has connected");
-                ServerSideConnection ssc = new ServerSideConnection(s, numPlayers); //Sätter ID till siffran av numPlayers. 1 || 2.
+                ServerSideConnection ssc = new ServerSideConnection(s, numPlayers, listening); //Sätter ID till siffran av numPlayers. 1 || 2.
                 if (numPlayers == 1) {
                     player1 = ssc;
                 } else {
@@ -102,7 +104,7 @@ public class Host {
         private int playerID;
         private Socket socket;
 
-        public ServerSideConnection(Socket s, int id) {
+        public ServerSideConnection(Socket s, int id, Listening listener) {
             playerID = id;
             socket = s;
             try {
@@ -188,7 +190,7 @@ public class Host {
                     case "handShake":
                         playerReady();
                         break;
-                    case "startGamePlayer1":
+                    case "startGame":
                         getCategoryOptionsList();
                         break;
                     case "retrieveQuestions":
