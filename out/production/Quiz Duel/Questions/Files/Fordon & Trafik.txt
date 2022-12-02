@@ -1,35 +1,10 @@
-Frågetext1
-svar1
-svar2
-svar3
-*svar4
-Frågetext2
-svar1
-svar2
-svar3
-*svar4
-Frågetext3
-svar1
-svar2
-svar3
-*svar4
-Frågetext4
-svar1
-svar2
-svar3
-*svar4
-Frågetext5
-svar1
-svar2
-svar3
-*svar4
-Frågetext6
-svar1
-svar2
-svar3
-*svar4
-Frågetext7
-svar1
-svar2
-svar3
-*svar4
+Vilket datum infördes högertrafik i Sverige?
+1981
+1950
+1965
+*1967
+Med körkortsbehörigheten B får du bland annat köra personbilar och lätta lastbilar med vilken totalvikt?
+4000 kg
+*3500 kg
+3000 kg
+1800 kg

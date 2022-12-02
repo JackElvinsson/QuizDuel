@@ -1,8 +1,8 @@
 public class User {
 
     private String name = "";
-    private int score = 0;
-
+    public int score = 0;
+public int gameScore = 0;
     public User(){
 
     }

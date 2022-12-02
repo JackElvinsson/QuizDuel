@@ -1,35 +1,10 @@
-Frågetext1
-svar1
-svar2
-svar3
-*svar4
-Frågetext2
-svar1
-svar2
-svar3
-*svar4
-Frågetext3
-svar1
-svar2
-svar3
-*svar4
-Frågetext4
-svar1
-svar2
-svar3
-*svar4
-Frågetext5
-svar1
-svar2
-svar3
-*svar4
-Frågetext6
-svar1
-svar2
-svar3
-*svar4
-Frågetext7
-svar1
-svar2
-svar3
-*svar4
+Vad kallas det pris Svenska akademin utser pristagare för?
+Arnbergska priset
+*Nobelprister i litteratur
+Jerringpriset
+Guldbaggen
+Vilken kommun tilldelades 2021 900 000 kr för att anställa en kommunpoet?
+Södertälje kommun
+Stockholm kommun
+Åre kommun
+*Tranemo kommun

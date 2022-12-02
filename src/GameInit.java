@@ -4,7 +4,6 @@ import Questions.Categories.Kategori;
 import Questions.Question;
 import Questions.QuestionInit;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,10 +44,13 @@ public class GameInit implements Serializable {
         for (Kategori cat : categoryList) {
             if (listOfOptions.size() < 4 && !cat.getUsed()) {
                 listOfOptions.add(cat);
+                System.out.println(cat.getCategoryName());
                 cat.setUsed(true);
             }
         }
+
         return listOfOptions;
+
     }
 
 
@@ -68,7 +70,10 @@ public class GameInit implements Serializable {
      */
     public List<Question> getQuestions(Kategori chosenCategory, int numberOfQuestions) throws IOException {
 
+
         return chosenCategory.generateQuestions(selectedCategory, numberOfQuestions);
+
+
     }
 
     public void skrivnågot() {

@@ -1,35 +1,10 @@
-Frågetext1
-svar1
-svar2
-svar3
-*svar4
-Frågetext2
-svar1
-svar2
-svar3
-*svar4
-Frågetext3
-svar1
-svar2
-svar3
-*svar4
-Frågetext4
-svar1
-svar2
-svar3
-*svar4
-Frågetext5
-svar1
-svar2
-svar3
-*svar4
-Frågetext6
-svar1
-svar2
-svar3
-*svar4
-Frågetext7
-svar1
-svar2
-svar3
-*svar4
+Vilken trubadur var först med att popularisera Carl Michael Bellman tolkningar?
+Cornelis Vreeswijk
+Fred Åkerström
+Evert Taube
+*Sven Ccholander
+Vilken musik assosieras med staden Nashville?
+Jazz
+*Country
+Bluegrass
+Blues

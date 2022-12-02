@@ -1,40 +1,15 @@
 Vem kan attribueras citatet "Jag fann Rom i gyttja; jag har lämnat den i marmor" eller mer känd på engelska "I found rome a city of bricks and left it a city of marble"
 Gaius Julius Caesar
-*Caesar Augustus, född Gaius Octavius
-Nero Claudius Caesar Augustus Germanicus, född Lucius Domitius Ahenobarbus
-"Caligula" Gaius Caesar Augustus Germanicus
-Frågetext1
-svar1
-svar2
-svar3
-*svar4
-Frågetext2
-svar1
-svar2
-svar3
-*svar4
-Frågetext3
-svar1
-svar2
-svar3
-*svar4
-Frågetext4
-svar1
-svar2
-svar3
-*svar4
-Frågetext5
-svar1
-svar2
-svar3
-*svar4
-Frågetext6
-svar1
-svar2
-svar3
-*svar4
-Frågetext7
-svar1
-svar2
-svar3
-*svar4
+*Caesar Augustus
+Nero Claudius
+Caligula
+Vilket år blev Finland självständigt?
+1900
+1910
+1915
+*1917
+Vilken kung sattes efter att ha förlorat Finland till Ryssland i husarrest under nio månader?
+Gustav Vasa
+*Gustav IV Adolf
+Oscar I
+Karl XI

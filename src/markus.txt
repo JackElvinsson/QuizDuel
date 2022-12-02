@@ -1,4 +1,3 @@
-import Questions.Answer;
 import Questions.Categories.Kategori;
 import Questions.Question;
 
@@ -18,16 +17,6 @@ public class GUI extends JFrame {
     boolean readyToPlay = false;
     int gridLoopCounter = 0;
 
-    public boolean isNextGame() {
-        return nextGame;
-    }
-
-    public void setNextGame(boolean nextGame) {
-        this.nextGame = nextGame;
-    }
-
-    boolean nextGame = false;
-
 
     public boolean isNewRound() {
         return nextQuestion;
@@ -39,21 +28,11 @@ public class GUI extends JFrame {
 
     private boolean nextQuestion = false;
 
-    public boolean isGaveUp() {
-        return gaveUp;
-    }
-
-    public void setGaveUp(boolean gaveUp) {
-        this.gaveUp = gaveUp;
-    }
-
-    private boolean gaveUp = false;
 
     public boolean isReadyToSend() {
         return readyToSend;
     }
 
-    public int turnCounter=0;
     public void setReadyToSend(boolean readyToSend) {
         this.readyToSend = readyToSend;
     }
@@ -85,38 +64,16 @@ public class GUI extends JFrame {
         return readyToPlay;
     }
 
-    public int getOpponentGameScore() {
-        return opponentGameScore;
-    }
+    int rows = 2;
 
-    private int opponentGameScore = 0;
-
-    public void setOpponentGameScore(int opponentGameScore) {
-        this.opponentGameScore = opponentGameScore;
-    }
-
-
-    private int rows;
-
-    int columns;
+    int columns = 3;
     int categoryTracker = -1;
-    protected int questionsPerRound = rows;
-    protected int categoriesPerRound = columns;
+    protected int questionsPerRound = columns;
+    protected int categoriesPerRound = rows;
     protected int answerCounter = 0;
     protected int categoryCounter = 0;
     private Kategori selectedItem;
     private List<Kategori> guiKategoriList;
-
-    private List<Question> opponentSelectedQs;
-
-    public List<Question> getGuiQuestionList() {
-        return guiQuestionList;
-    }
-
-    public void setGuiQuestionList(List<Question> guiQuestionList) {
-        this.guiQuestionList = guiQuestionList;
-    }
-
     private List<Question> guiQuestionList;
     private int oppArray[];
 
@@ -125,8 +82,6 @@ public class GUI extends JFrame {
     }
 
     private int[] answerResult;
-
-    private int finalOppScore;
 
     public boolean isSelectedCheck() {
         return selectedCheck;
@@ -384,8 +339,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 readyToPlay = true;
-                nextGame = true;
-                System.out.println("nextGame = true");
+
 //                    setCategories(player.getCategoryOptions(), firstCategory, secondCategory, thirdCategory, fourthCategory);
 
                 //TODO: Nästa spelare får välja kategori
@@ -468,8 +422,6 @@ public class GUI extends JFrame {
                 /**
                  * Kollar i listan efter det korrekta svaret, behåller det korrekta svaret och jämför med knappen som användaren valde
                  */
-                selectedAnswer1(guiQuestionList);
-                selectedCheck = false;
                 String correctAnswer = markCorrectAnswer(guiQuestionList, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, answerCounter);
                 markUserAnswer(correctAnswer, firstAnswer);
 
@@ -483,7 +435,6 @@ public class GUI extends JFrame {
 
 //                    //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 //
-                selectedAnswer2(guiQuestionList);
                 selectedCheck = false;
                 String correctAnswer = markCorrectAnswer(guiQuestionList, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, answerCounter);
                 markUserAnswer(correctAnswer, secondAnswer);
@@ -497,7 +448,6 @@ public class GUI extends JFrame {
 //
 //                    //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 //
-                selectedAnswer3(guiQuestionList);
                 selectedCheck = false;
                 String correctAnswer = markCorrectAnswer(guiQuestionList, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, answerCounter);
                 markUserAnswer(correctAnswer, thirdAnswer);
@@ -511,7 +461,6 @@ public class GUI extends JFrame {
 //
 //                    //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
 //
-                selectedAnswer4(guiQuestionList);
                 selectedCheck = false;
                 String correctAnswer = markCorrectAnswer(guiQuestionList, firstAnswer, secondAnswer, thirdAnswer, fourthAnswer, answerCounter);
                 markUserAnswer(correctAnswer, fourthAnswer);
@@ -522,9 +471,10 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                gaveUp = true;
                 changeScene(waitingPanel, lobbyPanel);
-                System.out.println("***GUI*** waitingPanel give up");
+
+                selectedCheck = false;
+                //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
             }
         });
 
@@ -535,9 +485,16 @@ public class GUI extends JFrame {
                 System.out.println("Rows: " + rows);
                 System.out.println("AnswerCounter: " + answerCounter);
                 if (categoryCounter >= columns) {
+                    categoryCounter = 0;
+                    answerCounter = 0;
+                    gridLoopCounter = 0;
+                    readyToPlay = false;
+                    newTurnReady = false;
 
-                    endOfGame();
-
+                    //TODO Uppdatera kategorialternati
+                    //TODO: Nästa spelare får välja kategori
+                    //TODO: Spelare som ej väljer hamnar i waitingPanel
+                    //TODO: Lägg till poäng till statPanel och uppdatera statPanel answerBox
                 } else if (answerCounter >= rows - 1) {
                     readyToPlay = false;
                     nextQuestion = false;
@@ -545,6 +502,7 @@ public class GUI extends JFrame {
                     gridLoopCounter++;
                     resetAnswerButtons(firstAnswer, secondAnswer, thirdAnswer, fourthAnswer);
                     newTurnReady = true;
+
                 }
             }
         });
@@ -552,18 +510,20 @@ public class GUI extends JFrame {
         statsPanelGiveUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gaveUp = true;
-                changeScene(statsPanel, lobbyPanel);
-                System.out.println("***GUI*** statsPanel give up");
-            }
-        });
 
+                //TODO: Utdelning av poäng till motståndare om en användare väljer att ge upp
+            }
+
+
+        });
         fortsättButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+//                answerCounter++;
                 if (answerCounter >= rows) {
                     answerCounter = rows - 1;
+
                 }
                 if (answerCounter == rows - 1) {
 
@@ -611,6 +571,7 @@ public class GUI extends JFrame {
         fromScene.setVisible(false);
         toScene.setVisible(true);
     }
+
 
 
     public List<Integer> generateIntegerList(int rows, int columns) {
@@ -677,10 +638,6 @@ public class GUI extends JFrame {
 
         rows = numberOfQuestions;
         columns = numberOfRounds;
-//        rows = numberOfRounds;
-//        columns = numberOfQuestions;
-        System.out.println("***GUI***Antal frågor : " + rows);
-        System.out.println("***GUI***Antal rundor : " + columns);
 
         statsGridPlayer.setLayout(new GridLayout(columns, rows, 10, 10));
         statsGridOpponent.setLayout(new GridLayout(columns, rows, 10, 10));
@@ -741,51 +698,27 @@ public class GUI extends JFrame {
         if (quiQuestionList.get(answerCounter).getAnswer1().getIsAnswerCorrect()) {
             firstAnswer.setBackground(Color.GREEN);
 
-            System.out.println("***GUI*** " + quiQuestionList.get(answerCounter).getAnswer1().getAnswerText());
+            System.out.println("***GUI*** " +quiQuestionList.get(answerCounter).getAnswer1().getAnswerText());
             return firstAnswer.getText();
         } else if (quiQuestionList.get(answerCounter).getAnswer2().getIsAnswerCorrect()) {
             secondAnswer.setBackground(Color.GREEN);
 
-            System.out.println("***GUI*** " + quiQuestionList.get(answerCounter).getAnswer2().getAnswerText());
+            System.out.println("***GUI*** " +quiQuestionList.get(answerCounter).getAnswer2().getAnswerText());
             return secondAnswer.getText();
         } else if (quiQuestionList.get(answerCounter).getAnswer3().getIsAnswerCorrect()) {
             thirdAnswer.setBackground(Color.GREEN);
 
-            System.out.println("***GUI*** " + quiQuestionList.get(answerCounter).getAnswer3().getAnswerText());
+            System.out.println("***GUI*** " +quiQuestionList.get(answerCounter).getAnswer3().getAnswerText());
             return thirdAnswer.getText();
         } else if (quiQuestionList.get(answerCounter).getAnswer4().getIsAnswerCorrect()) {
             fourthAnswer.setBackground(Color.GREEN);
 
-            System.out.println("***GUI*** " + quiQuestionList.get(answerCounter).getAnswer4().getAnswerText());
+            System.out.println("***GUI*** " +quiQuestionList.get(answerCounter).getAnswer4().getAnswerText());
             return fourthAnswer.getText();
         } else
             return null;
     }
 
-
-    public void updateOpponentStatGrid() {
-        Answer answer = new Answer();
-
-        for (int i = 0; i < opponentSelectedQs.size(); i++) {
-
-
-            if (opponentSelectedQs.get(i).getAnswer1().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            } else if (opponentSelectedQs.get(i).getAnswer2().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            } else if (opponentSelectedQs.get(i).getAnswer3().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            } else if (opponentSelectedQs.get(i).getAnswer4().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            }
-
-            if (answer.getIsAnswerCorrect().equals(true)) {
-                boxGrid2[turnCounter-1][i].setBackground(Color.green);
-            } else
-                boxGrid2[turnCounter-1][i].setBackground(Color.red);
-
-        }
-    }
     // colorTest
 //        boxGrid[0][1].setBackground(Color.red);
 //        boxGrid2[0][2].setBackground(Color.red);
@@ -793,16 +726,13 @@ public class GUI extends JFrame {
     public void markUserAnswer(String correctAnswer, JButton answer) {
 
         if (!answer.getText().equals(correctAnswer)) {
-
             boxGrid[categoryCounter][answerCounter].setBackground(Color.red);
             System.out.println("***GUI*** categoryCounter: " + categoryCounter + " " + " answerCounter: " + answerCounter);
             answerResult[answerCounter] = 0;
             answer.setBackground(Color.red);
             fortsättButton.setVisible(true);
             disableAnswerButtons();
-
         } else {
-
             boxGrid[categoryCounter][answerCounter].setBackground(Color.green);
             System.out.println("***GUI*** categoryCounter: " + categoryCounter + " " + " answerCounter: " + answerCounter);
             answerResult[answerCounter] = 1;
@@ -839,16 +769,12 @@ public class GUI extends JFrame {
 //        rows=guiQuestionList.size();
     }
 
-    public void opponentArrayTaxi(List<Question> opponentSelectedQuestions, int finalOpponentScore) {
+    public void opponentArrayTaxi(int[] opponentArray) {
 
-        opponentSelectedQs = opponentSelectedQuestions;
-        finalOppScore = finalOpponentScore;
-//        for (int i = 0; i < opponentArray.length; i++) {
-//            System.out.println("***GUI*** Mottaged array, index:" + i + " = " + opponentArray[i]);
-//        }
-
-//        setOpponentStatGrid(opponentArray);
-        updateOpponentStatGrid();
+        for (int i = 0; i < opponentArray.length; i++) {
+            System.out.println("***GUI*** Mottaged array, index:" + i + " = " + opponentArray[i]);
+        }
+        setOpponentStatGrid(opponentArray);
 
 
     }
@@ -868,71 +794,20 @@ public class GUI extends JFrame {
         return randomGenerator.nextInt(questionList.size());
     }
 
-//    public void setOpponentStatGrid(int[] opponentArray) {
-//
-//
-//        for (int j = 0; j < opponentArray.length; j++) {
-//
-//            if (opponentArray[j] == 1) {
-//                boxGrid2[gridLoopCounter][j].setBackground(Color.green);
-//                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j + " till GRÖN");
-//            } else {
-//                boxGrid2[gridLoopCounter][j].setBackground(Color.red);
-//                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j + " till RÖD");
-//
-//            }
-//        }
-//    }
+    public void setOpponentStatGrid(int[] opponentArray) {
 
-    public void endOfGame() {
-        System.out.println("ENDOFGAME()");
-        categoryCounter = 0;
-        answerCounter = 0;
-        gridLoopCounter = 0;
-        readyToPlay = false;
-        newTurnReady = false;
-        nextQuestion = false;
 
-        System.out.println("USER: " + user.getScore());
-        System.out.println("OPPONENT SCORE: " + finalOppScore);
-        if (user.getScore() > finalOppScore) {
-            System.out.println("User vann");
-            userWins.setText(String.valueOf(user.gameScore + 1));
-        } else if (user.getScore() == finalOppScore) {
-            System.out.println("lika!");
-            oppWins.setText(String.valueOf(opponentGameScore + 1));
-            userWins.setText(String.valueOf(user.gameScore + 1));
-        } else {
-            oppWins.setText(String.valueOf(opponentGameScore + 1));
-            System.out.println("Du förlora");
+        for (int j = 0; j < opponentArray.length; j++) {
+
+            if (opponentArray[j] == 1) {
+                boxGrid2[gridLoopCounter][j].setBackground(Color.green);
+                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j  +" till GRÖN");
+            } else {
+                boxGrid2[gridLoopCounter][j].setBackground(Color.red);
+                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j + " till RÖD");
+
+            }
         }
-        changeScene(statsPanel, lobbyPanel);
-    }
-
-    public void resetValues() {
-        categoryCounter = 0;
-        answerCounter = 0;
-        gridLoopCounter = 0;
-        readyToPlay = false;
-        newTurnReady = false;
-        nextQuestion = false;
-        selectedCheck = false;
-    }
-
-    public void selectedAnswer1(List<Question> questionList) {
-        questionList.get(0).getAnswer1().setSelected(true);
-    }
-
-    public void selectedAnswer2(List<Question> questionList) {
-        questionList.get(0).getAnswer2().setSelected(true);
-    }
-
-    public void selectedAnswer3(List<Question> questionList) {
-        questionList.get(0).getAnswer3().setSelected(true);
-    }
-
-    public void selectedAnswer4(List<Question> questionList) {
-        questionList.get(0).getAnswer4().setSelected(true);
     }
 
 

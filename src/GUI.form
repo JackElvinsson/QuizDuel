@@ -27,7 +27,7 @@
           <minimumSize width="500" height="400"/>
           <preferredSize width="500" height="400"/>
           <verifyInputWhenFocusTarget value="true"/>
-          <visible value="true"/>
+          <visible value="false"/>
         </properties>
         <border type="bevel-raised">
           <title-color color="-16777216"/>
@@ -75,7 +75,7 @@
                 </constraints>
                 <properties>
                   <font name="Comic Sans MS" size="23" style="1"/>
-                  <foreground color="-1641729"/>
+                  <foreground color="-131585"/>
                   <text value="Välj ett spelarnamn och tryck på "/>
                 </properties>
               </component>
@@ -85,7 +85,7 @@
                 </constraints>
                 <properties>
                   <font name="Comic Sans MS" size="23" style="1"/>
-                  <foreground color="-1641729"/>
+                  <foreground color="-131585"/>
                   <text value="&quot;Till lobby&quot; för att fortsätta!"/>
                 </properties>
               </component>
@@ -584,7 +584,7 @@
           </component>
         </children>
       </grid>
-      <grid id="b44d2" binding="playPanel" layout-manager="GridLayoutManager" row-count="11" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="b44d2" binding="playPanel" layout-manager="GridLayoutManager" row-count="12" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <card name="Card4"/>
@@ -602,14 +602,15 @@
             </constraints>
             <properties>
               <editable value="false"/>
-              <font name="Comic Sans MS" size="12"/>
+              <font name="Comic Sans MS" size="22" style="1"/>
+              <lineWrap value="true"/>
               <margin top="0" left="10" bottom="0" right="10"/>
               <text value=""/>
             </properties>
           </component>
           <component id="4030d" class="javax.swing.JLabel">
             <constraints>
-              <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value=" "/>
@@ -632,7 +633,7 @@
             <properties>
               <background color="-16750900"/>
               <focusPainted value="false"/>
-              <font name="Comic Sans MS" size="23" style="1"/>
+              <font name="Comic Sans MS" size="20" style="1"/>
               <foreground color="-131585"/>
               <requestFocusEnabled value="false"/>
               <text value="Svarsalternativ4"/>
@@ -647,7 +648,7 @@
             <properties>
               <background color="-16750900"/>
               <focusPainted value="false"/>
-              <font name="Comic Sans MS" size="23" style="1"/>
+              <font name="Comic Sans MS" size="20" style="1"/>
               <foreground color="-131585"/>
               <requestFocusEnabled value="false"/>
               <text value="Svarsalternativ3"/>
@@ -662,7 +663,7 @@
             <properties>
               <background color="-16750900"/>
               <focusPainted value="false"/>
-              <font name="Comic Sans MS" size="23" style="1"/>
+              <font name="Comic Sans MS" size="20" style="1"/>
               <foreground color="-131585"/>
               <requestFocusEnabled value="false"/>
               <text value="Svarsalternativ2"/>
@@ -677,7 +678,7 @@
             <properties>
               <background color="-16750900"/>
               <focusPainted value="false"/>
-              <font name="Comic Sans MS" size="23" style="1"/>
+              <font name="Comic Sans MS" size="20" style="1"/>
               <foreground color="-131585"/>
               <requestFocusEnabled value="false"/>
               <text value="Svarsalternativ1"/>
@@ -706,6 +707,32 @@
               <stringPainted value="false"/>
               <value value="0"/>
               <verifyInputWhenFocusTarget value="false"/>
+            </properties>
+          </component>
+          <component id="337a1" class="javax.swing.JButton" binding="fortsättButton" default-binding="true">
+            <constraints>
+              <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-14181572"/>
+              <foreground color="-16777216"/>
+              <text value="Fortsätt"/>
+            </properties>
+          </component>
+          <component id="b274" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="  "/>
+            </properties>
+          </component>
+          <component id="45db1" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="  "/>
             </properties>
           </component>
         </children>
@@ -907,7 +934,7 @@
               <text value="0/0"/>
             </properties>
           </component>
-          <component id="7f3e4" class="javax.swing.JLabel">
+          <component id="7f3e4" class="javax.swing.JLabel" binding="player1Stats">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -918,7 +945,7 @@
               <text value="Spelare2 statistik:"/>
             </properties>
           </component>
-          <component id="b43b9" class="javax.swing.JLabel">
+          <component id="b43b9" class="javax.swing.JLabel" binding="player2Stats">
             <constraints>
               <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
