@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -682,8 +683,8 @@ public class GUI extends JFrame {
         System.out.println("***GUI***Antal frågor : " + rows);
         System.out.println("***GUI***Antal rundor : " + columns);
 
-        statsGridPlayer.setLayout(new GridLayout(columns, rows, 10, 10));
-        statsGridOpponent.setLayout(new GridLayout(columns, rows, 10, 10));
+        statsGridPlayer.setLayout(new GridLayout(rows, columns, 10, 10));
+        statsGridOpponent.setLayout(new GridLayout(rows, columns, 10, 10));
         statsGridPlayer.setForeground(new Color(144, 184, 252));
         statsGridOpponent.setForeground(new Color(144, 184, 252));
 
@@ -763,29 +764,29 @@ public class GUI extends JFrame {
     }
 
 
-    public void updateOpponentStatGrid() {
-        Answer answer = new Answer();
-
-        for (int i = 0; i < opponentSelectedQs.size(); i++) {
-
-
-            if (opponentSelectedQs.get(i).getAnswer1().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            } else if (opponentSelectedQs.get(i).getAnswer2().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            } else if (opponentSelectedQs.get(i).getAnswer3().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            } else if (opponentSelectedQs.get(i).getAnswer4().isSelected()) {
-                answer = opponentSelectedQs.get(i).getAnswer1();
-            }
-
-            if (answer.getIsAnswerCorrect().equals(true)) {
-                boxGrid2[turnCounter-1][i].setBackground(Color.green);
-            } else
-                boxGrid2[turnCounter-1][i].setBackground(Color.red);
-
-        }
-    }
+//    public void updateOpponentStatGrid() {
+//        Answer answer = new Answer();
+//
+//        for (int i = 0; i < opponentSelectedQs.size(); i++) {
+//
+//
+//            if (opponentSelectedQs.get(i).getAnswer1().isSelected()) {
+//                answer = opponentSelectedQs.get(i).getAnswer1();
+//            } else if (opponentSelectedQs.get(i).getAnswer2().isSelected()) {
+//                answer = opponentSelectedQs.get(i).getAnswer1();
+//            } else if (opponentSelectedQs.get(i).getAnswer3().isSelected()) {
+//                answer = opponentSelectedQs.get(i).getAnswer1();
+//            } else if (opponentSelectedQs.get(i).getAnswer4().isSelected()) {
+//                answer = opponentSelectedQs.get(i).getAnswer1();
+//            }
+//
+//            if (answer.getIsAnswerCorrect().equals(true)) {
+//                boxGrid2[turnCounter-1][i].setBackground(Color.green);
+//            } else
+//                boxGrid2[turnCounter-1][i].setBackground(Color.red);
+//
+//        }
+//    }
     // colorTest
 //        boxGrid[0][1].setBackground(Color.red);
 //        boxGrid2[0][2].setBackground(Color.red);
@@ -794,7 +795,7 @@ public class GUI extends JFrame {
 
         if (!answer.getText().equals(correctAnswer)) {
 
-            boxGrid[categoryCounter][answerCounter].setBackground(Color.red);
+            boxGrid[gridLoopCounter][answerCounter].setBackground(Color.red);
             System.out.println("***GUI*** categoryCounter: " + categoryCounter + " " + " answerCounter: " + answerCounter);
             answerResult[answerCounter] = 0;
             answer.setBackground(Color.red);
@@ -803,7 +804,7 @@ public class GUI extends JFrame {
 
         } else {
 
-            boxGrid[categoryCounter][answerCounter].setBackground(Color.green);
+            boxGrid[gridLoopCounter][answerCounter].setBackground(Color.green);
             System.out.println("***GUI*** categoryCounter: " + categoryCounter + " " + " answerCounter: " + answerCounter);
             answerResult[answerCounter] = 1;
             answer.setBackground(Color.green);
@@ -839,16 +840,17 @@ public class GUI extends JFrame {
 //        rows=guiQuestionList.size();
     }
 
-    public void opponentArrayTaxi(List<Question> opponentSelectedQuestions, int finalOpponentScore) {
+    public void opponentArrayTaxi(int[] opponentArray, int finalOpponentScore) {
 
-        opponentSelectedQs = opponentSelectedQuestions;
+//        opponentSelectedQs = opponentSelectedQuestions;
         finalOppScore = finalOpponentScore;
 //        for (int i = 0; i < opponentArray.length; i++) {
 //            System.out.println("***GUI*** Mottaged array, index:" + i + " = " + opponentArray[i]);
 //        }
 
-//        setOpponentStatGrid(opponentArray);
-        updateOpponentStatGrid();
+        System.out.println("///////////TAR EMOT///////////CLIENT: " + Arrays.toString(opponentArray));
+        setOpponentStatGrid(opponentArray);
+//        updateOpponentStatGrid();
 
 
     }
@@ -868,21 +870,21 @@ public class GUI extends JFrame {
         return randomGenerator.nextInt(questionList.size());
     }
 
-//    public void setOpponentStatGrid(int[] opponentArray) {
-//
-//
-//        for (int j = 0; j < opponentArray.length; j++) {
-//
-//            if (opponentArray[j] == 1) {
-//                boxGrid2[gridLoopCounter][j].setBackground(Color.green);
-//                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j + " till GRÖN");
-//            } else {
-//                boxGrid2[gridLoopCounter][j].setBackground(Color.red);
-//                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j + " till RÖD");
-//
-//            }
-//        }
-//    }
+    public void setOpponentStatGrid(int[] opponentArray) {
+
+
+        for (int j = 0; j < opponentArray.length; j++) {
+
+            if (opponentArray[j] == 1) {
+                boxGrid2[gridLoopCounter][j].setBackground(Color.green);
+                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j + " till GRÖN");
+            } else {
+                boxGrid2[gridLoopCounter][j].setBackground(Color.red);
+                System.out.println("***GUI*** Satte boxgrid ruta " + gridLoopCounter + " " + j + " till RÖD");
+
+            }
+        }
+    }
 
     public void endOfGame() {
         System.out.println("ENDOFGAME()");

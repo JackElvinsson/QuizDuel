@@ -19,8 +19,8 @@ public class Gameserver extends Thread {
     private int numberOfRounds;
     private int turnsMade = 0;
 
-    private List<Question> player1Results;
-    private List<Question> player2Results;
+    private int[] player1Results;
+    private int[] player2Results;
 
     private int player1Score;
     private int player2Score;
@@ -131,7 +131,7 @@ public class Gameserver extends Thread {
             } finally {
                 try {
                     outputStream.flush();
-                    outputStream.reset();
+//                    outputStream.reset();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -191,7 +191,7 @@ public class Gameserver extends Thread {
             } finally {
                 try {
                     outputStream.flush();
-                    outputStream.reset();
+//                    outputStream.reset();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -254,7 +254,7 @@ public class Gameserver extends Thread {
                 } finally {
                     try {
                         outputStream.flush();
-                        outputStream.reset();
+//                        outputStream.reset();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -272,7 +272,7 @@ public class Gameserver extends Thread {
             } finally {
                 try {
                     outputStream.flush();
-                    outputStream.reset();
+//                    outputStream.reset();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -289,7 +289,7 @@ public class Gameserver extends Thread {
             } finally {
                 try {
                     outputStream.flush();
-                    outputStream.reset();
+//                    outputStream.reset();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -349,7 +349,7 @@ public class Gameserver extends Thread {
                 if (playerID == 1) {
                     player1Score = (int) inputStream.readObject();
                     System.out.println("Player 1 score is read: " + player1Score);
-                    player1Results = (List<Question>) inputStream.readObject();
+                    player1Results = (int[]) inputStream.readObject();
                     System.out.println("player1Results list is read");
                     System.out.println("PlayerID: " + playerID + " Player1SyncReady= " + player1SyncReady);
                     System.out.println("PlayerID: " + playerID + " Player2SyncReady= " + player2SyncReady);
@@ -362,7 +362,7 @@ public class Gameserver extends Thread {
                 } else if (playerID == 2) {
                     player2Score = (int) inputStream.readObject();
                     System.out.println("Player 2 score is read: " + player2Score);
-                    player2Results = (List<Question>) inputStream.readObject();
+                    player2Results = (int[]) inputStream.readObject();
                     System.out.println("player2Results list is read");
                     player2SyncReady = true;
                     System.out.println("PlayerID: " + playerID + " Player1SyncReady= " + player1SyncReady);
@@ -487,14 +487,14 @@ public class Gameserver extends Thread {
                 outputStream.writeObject(senderID);
                 outputStream.writeObject(opponentName);
                 outputStream.flush();
-                outputStream.reset();
+//                outputStream.reset();
             } catch (IOException ex) {
                 System.out.println("IOException from getOpponentName()");
                 throw new RuntimeException(ex);
             } finally {
                 try {
                     outputStream.flush();
-                    outputStream.reset();
+//                    outputStream.reset();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -522,7 +522,7 @@ public class Gameserver extends Thread {
             } finally {
                 try {
                     outputStream.flush();
-                    outputStream.reset();
+//                    outputStream.reset();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -574,7 +574,7 @@ public class Gameserver extends Thread {
             } finally {
                 try {
                     outputStream.flush();
-                    outputStream.reset();
+//                    outputStream.reset();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

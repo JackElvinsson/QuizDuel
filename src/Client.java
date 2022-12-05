@@ -507,7 +507,7 @@ public class Client extends JFrame implements Serializable, Closeable {
             try {
                 opponentScore = (int) inputStream.readObject();
                 System.out.println("CLIENT: opponentScore: " + opponentScore);
-                opponentSelectedQuestions = (List<Question>) inputStream.readObject();
+                opponentArray = (int[]) inputStream.readObject();
                 System.out.println("CLIENT: selectedquestionslist  is read");
                 System.out.println("CLIENT: Player 1 score is read");
 
@@ -518,12 +518,11 @@ public class Client extends JFrame implements Serializable, Closeable {
 
             gui.getOpponentCurrentScore().setText(opponentScore + "/" + gui.rowsToString(numberOfQuestions * numberOfRounds));
 
-            gui.opponentArrayTaxi(opponentSelectedQuestions, opponentScore);
+            gui.opponentArrayTaxi(opponentArray, opponentScore);
 
 
             System.out.println("CLIENT: Nu trycker jag på newTurn()");
             newTurn();
-
         }
 
         public void checkGameEnd() {
@@ -536,7 +535,6 @@ public class Client extends JFrame implements Serializable, Closeable {
                 } finally {
                     try {
                         outputStream.flush();
-                        outputStream.reset();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -608,7 +606,9 @@ public class Client extends JFrame implements Serializable, Closeable {
                 playerScore = gui.user.getScore();
                 System.out.println("CLIENT: My playerScore is: " + playerScore);
                 outputStream.writeObject(playerScore);
-                outputStream.writeObject(gui.getGuiQuestionList()); /*ÄNDRA TILL QUESTION LIST**/
+                outputStream.reset();
+                outputStream.writeObject(gui.getAnswerResult()); /*ÄNDRA TILL QUESTION LIST**/
+                System.out.println("///////////SKICKAR///////////CLIENT: " + Arrays.toString(gui.getAnswerResult()));
 
                 System.out.println("CLIENT: user.getScore: " + gui.user.getScore());
                 System.out.println("CLIENT: Efter writeObject enligt playerScore i client: " + playerScore);
